@@ -1,4 +1,6 @@
 package com.tiddlywiki.atw;
 
-class MainActivity {
+import android.app.Activity;
+
+public class MainActivity extends Activity {
 }
