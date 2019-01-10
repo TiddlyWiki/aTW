@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
         //Set a WebChromeClient up
         mWebView.setWebChromeClient(new AtwWebChromeClient(this));
         //Add a JavascriptInterface that is accessible within the WebView: window.twi
-        mWebView.addJavascriptInterface(new AtwWebAppInterface(this,mWebView), "twi");
+        mWebView.addJavascriptInterface(new AtwWebAppInterface(this,mWebView,getWindow()), "twi");
 
         int fileAccessPermission = ContextCompat.checkSelfPermission(mContext,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);

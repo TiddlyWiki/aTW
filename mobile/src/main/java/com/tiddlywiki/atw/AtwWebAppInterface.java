@@ -1,7 +1,9 @@
 package com.tiddlywiki.atw;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
+import android.view.Window;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.Toast;
@@ -22,11 +24,13 @@ import static android.content.ContentValues.TAG;
 public class AtwWebAppInterface {
     Context mContext;
     WebView mWebView;
+    Window mWindow;
 
     /** Instantiate the interface and set the context */
-    AtwWebAppInterface(Context c, WebView v) {
+    AtwWebAppInterface(Context c, WebView v, Window w) {
         mContext = c;
         mWebView = v;
+        mWindow = w;
     }
 
     /** Show a toast from the web page */
@@ -110,5 +114,17 @@ public class AtwWebAppInterface {
                 }
             }
         });
+    }
+
+    //TODO: on palette changes in wiki, if background changes, update system ui colors
+    //window.twi.updateSystemColors($tw.wiki.extractTiddlerDataItem($tw.wiki.getTiddlerText('$:/palette'),'page-background'));
+    @JavascriptInterface
+    public void updateSystemColors(String colorString) {
+        try {
+            mWindow.setStatusBarColor(Color.parseColor(colorString.replaceAll("\"","")));
+            mWindow.setNavigationBarColor(Color.parseColor(colorString.replaceAll("\"","")));
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
     }
 }
