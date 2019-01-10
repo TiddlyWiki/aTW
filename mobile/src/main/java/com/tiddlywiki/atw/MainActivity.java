@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         mWebSettings.setAllowUniversalAccessFromFileURLs(true);
 
         //Set a WebViewClient up
-        mWebView.setWebViewClient(new AtwWebViewClient(this));
+        mWebView.setWebViewClient(new AtwWebViewClient(this,mWebView));
         //Set a WebChromeClient up
         mWebView.setWebChromeClient(new AtwWebChromeClient(this));
         //Add a JavascriptInterface that is accessible within the WebView: window.twi
