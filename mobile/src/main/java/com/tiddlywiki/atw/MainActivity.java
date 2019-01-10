@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
                 } else if (ContextCompat.checkSelfPermission(mContext,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
-                    mWebView.loadUrl("file:///storage/emulated/0/TW/LandingPage/landing_page.html");
+                    mWebView.loadUrl("file:///storage/emulated/0/aTW/LandingPage/landing_page.html");
                     int cameraAccessPermission = ContextCompat.checkSelfPermission(mContext,
                             Manifest.permission.CAMERA);
                     if (cameraAccessPermission != PackageManager.PERMISSION_GRANTED) {
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         OutputStream out;
         try {
 
-            String outputFile = String.valueOf(path) + File.separator + name;
+            String outputFile = path + File.separator + name;
 
             in = getResources().openRawResource(
                     getResources().getIdentifier("raw/" + identifier,
@@ -106,14 +106,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void makeLandingPage() {
-        File path = new File("/storage/emulated/0" + File.separator + R.string.app_name + File.separator + "LandingPage");
+        File path = new File("/storage/emulated/0" + File.separator + "aTW" + File.separator + "LandingPage");
         copyRawFile(String.valueOf(path), "landing_page.html", "landing_page");
         copyRawFile(String.valueOf(path), "missing_favicon.png", "missing_favicon");
     }
 
     private void checkLandingPageSetup() {
         File extStoragePath = Environment.getExternalStorageDirectory();
-        String path = String.valueOf(extStoragePath) + File.separator + R.string.app_name + File.separator + "LandingPage";
+        String path = String.valueOf(extStoragePath) + File.separator + "aTW" + File.separator + "LandingPage";
         File testFile = new File(path);
         if(!testFile.getParentFile().exists()) {
             testFile.getParentFile().mkdirs();
@@ -163,6 +163,9 @@ public class MainActivity extends AppCompatActivity {
         mWebSettings.setDomStorageEnabled(true);
         mWebSettings.setUseWideViewPort(true);
         mWebSettings.setLoadWithOverviewMode(true);
+        mWebSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        mWebSettings.setAllowFileAccessFromFileURLs(true);
+        mWebSettings.setAllowUniversalAccessFromFileURLs(true);
 
         //Set a WebViewClient up
         mWebView.setWebViewClient(new AtwWebViewClient(this));
@@ -175,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if (fileAccessPermission == PackageManager.PERMISSION_GRANTED) {
-            mWebView.loadUrl("file:///storage/emulated/0/" + R.string.app_name + "/LandingPage/landing_page.html");
+            mWebView.loadUrl("file:///storage/emulated/0/aTW/LandingPage/landing_page.html");
         } else {
             mWebView.destroy();
         }
