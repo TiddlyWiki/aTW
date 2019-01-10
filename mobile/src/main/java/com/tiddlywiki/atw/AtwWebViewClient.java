@@ -63,6 +63,11 @@ public class AtwWebViewClient extends WebViewClient {
                 new ValueCallback<String>() {
                     @Override
                     public void onReceiveValue(String colorString) {
+                        //Convert color string if it's of the form #aaa
+                        char[] colorStringArray = colorString.toCharArray();
+                        if(colorString.length() == 4 && colorStringArray[0] == '#') {
+                            colorString = "#" + colorStringArray[1] + colorStringArray[1] + colorStringArray[2] + colorStringArray[2] + colorStringArray[3] + colorStringArray[3];
+                        }
                         try {
                             mWindow.setStatusBarColor(Color.parseColor(colorString.replaceAll("\"","")));
                             mWindow.setNavigationBarColor(Color.parseColor(colorString.replaceAll("\"","")));

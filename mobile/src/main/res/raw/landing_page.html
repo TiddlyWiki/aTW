@@ -137,21 +137,43 @@ Error message and password prompt
 
 <p>This <a class="tc-tiddlylink-external" href="https://tiddlywiki.com" rel="noopener noreferrer" target="_blank">TiddlyWiki</a> contains the following tiddlers:</p><p><ul>
 
+<li>$:/_langing_page_styles</li>
+
+<li>$:/config/ColourPicker/New</li>
+
+<li>$:/config/ColourPicker/Recent</li>
+
 <li>$:/core</li>
 
 <li>$:/DefaultTiddlers</li>
 
 <li>$:/isEncrypted</li>
 
+<li>$:/palettes/Vanilla</li>
+
 <li>$:/state/folded/startup connector</li>
+
+<li>$:/state/sidebar</li>
+
+<li>$:/state/tab--1498284803</li>
+
+<li>$:/state/tab/moresidebar-1850697562</li>
+
+<li>$:/state/tab/sidebar--595412856</li>
 
 <li>$:/StoryList</li>
 
+<li>$:/temp/advancedsearch</li>
+
 <li>$:/temp/info-plugin</li>
+
+<li>$:/temp/search</li>
 
 <li>$:/themes/tiddlywiki/snowwhite</li>
 
 <li>$:/themes/tiddlywiki/vanilla</li>
+
+<li>pick a color</li>
 
 <li>startup connector</li>
 
@@ -167,6 +189,32 @@ Error message and password prompt
 <!--~~ Ordinary tiddlers ~~-->
 
 <div id="storeArea" style="display:none;">
+<div created="20190110205331216" modified="20190110210930647" tags="$:/tags/Stylesheet" title="$:/_langing_page_styles">
+<pre>.tc-tiddler-frame {
+margin-bottom: 0.5em;
+margin-left: 0.35em;
+margin-right: 0.35em;
+border-radius: 3px;
+box-shadow: 0px 3px rgba( 0, 0, 0, 0.1 );
+}
+
+&lt;$reveal state=&quot;$:/state/sidebar&quot; type=&quot;match&quot; text=&quot;no&quot;&gt;
+.tc-sidebar-scrollable {
+display: none;
+}
+
+.tc-tiddler-frame:nth-of-type(1) {
+margin-top: 0.5em;
+}
+
+&lt;/$reveal&gt;</pre>
+</div>
+<div created="20190110205315758" modified="20190110211001380" title="$:/config/ColourPicker/New">
+<pre>#333333</pre>
+</div>
+<div created="20190110205319798" list="#333333 #17a #f4f4f4 #123456" modified="20190110211002566" title="$:/config/ColourPicker/Recent">
+<pre></pre>
+</div>
 <div author="JeremyRuston" core-version="&gt;=5.0.0" dependents="" description="TiddlyWiki5 core" list="readme" plugin-priority="0" plugin-type="plugin" title="$:/core" type="application/json" version="5.1.19">
 <pre>{
     &quot;tiddlers&quot;: {
@@ -9046,11 +9094,141 @@ Error message and password prompt
 <div title="$:/isEncrypted">
 <pre>no</pre>
 </div>
+<div created="20190110205319799" description="Pale and unobtrusive" modified="20190110211002566" name="Vanilla" tags="$:/tags/Palette" title="$:/palettes/Vanilla" type="application/x-tiddler-dictionary">
+<pre>alert-background: #ffe476
+alert-border: #b99e2f
+alert-highlight: #881122
+alert-muted-foreground: #b99e2f
+background: #ffffff
+blockquote-bar: &lt;&lt;colour muted-foreground&gt;&gt;
+button-background: 
+button-foreground: 
+button-border: 
+code-background: #f7f7f9
+code-border: #e1e1e8
+code-foreground: #dd1144
+diff-delete-background: #ffc9c9
+diff-delete-foreground: &lt;&lt;colour foreground&gt;&gt;
+diff-equal-background: 
+diff-equal-foreground: &lt;&lt;colour foreground&gt;&gt;
+diff-insert-background: #aaefad
+diff-insert-foreground: &lt;&lt;colour foreground&gt;&gt;
+diff-invisible-background: 
+diff-invisible-foreground: &lt;&lt;colour muted-foreground&gt;&gt;
+dirty-indicator: #ff0000
+download-background: #34c734
+download-foreground: &lt;&lt;colour background&gt;&gt;
+dragger-background: &lt;&lt;colour foreground&gt;&gt;
+dragger-foreground: &lt;&lt;colour background&gt;&gt;
+dropdown-background: &lt;&lt;colour background&gt;&gt;
+dropdown-border: &lt;&lt;colour muted-foreground&gt;&gt;
+dropdown-tab-background-selected: #fff
+dropdown-tab-background: #ececec
+dropzone-background: rgba(0,200,0,0.7)
+external-link-background-hover: inherit
+external-link-background-visited: inherit
+external-link-background: inherit
+external-link-foreground-hover: inherit
+external-link-foreground-visited: #0000aa
+external-link-foreground: #0000ee
+foreground: #333333
+message-background: #ecf2ff
+message-border: #cfd6e6
+message-foreground: #547599
+modal-backdrop: &lt;&lt;colour foreground&gt;&gt;
+modal-background: &lt;&lt;colour background&gt;&gt;
+modal-border: #999999
+modal-footer-background: #f5f5f5
+modal-footer-border: #dddddd
+modal-header-border: #eeeeee
+muted-foreground: #bbb
+notification-background: #ffffdd
+notification-border: #999999
+page-background: #333333
+pre-background: #f5f5f5
+pre-border: #cccccc
+primary: #5778d8
+select-tag-background: 
+select-tag-foreground: 
+sidebar-button-foreground: &lt;&lt;colour foreground&gt;&gt;
+sidebar-controls-foreground-hover: #000000
+sidebar-controls-foreground: #aaaaaa
+sidebar-foreground-shadow: rgba(255,255,255, 0.8)
+sidebar-foreground: #acacac
+sidebar-muted-foreground-hover: #444444
+sidebar-muted-foreground: #c0c0c0
+sidebar-tab-background-selected: #f4f4f4
+sidebar-tab-background: #e0e0e0
+sidebar-tab-border-selected: &lt;&lt;colour tab-border-selected&gt;&gt;
+sidebar-tab-border: &lt;&lt;colour tab-border&gt;&gt;
+sidebar-tab-divider: #e4e4e4
+sidebar-tab-foreground-selected: 
+sidebar-tab-foreground: &lt;&lt;colour tab-foreground&gt;&gt;
+sidebar-tiddler-link-foreground-hover: #444444
+sidebar-tiddler-link-foreground: #999999
+site-title-foreground: &lt;&lt;colour tiddler-title-foreground&gt;&gt;
+static-alert-foreground: #aaaaaa
+tab-background-selected: #ffffff
+tab-background: #d8d8d8
+tab-border-selected: #d8d8d8
+tab-border: #cccccc
+tab-divider: #d8d8d8
+tab-foreground-selected: &lt;&lt;colour tab-foreground&gt;&gt;
+tab-foreground: #666666
+table-border: #dddddd
+table-footer-background: #a8a8a8
+table-header-background: #f0f0f0
+tag-background: #ec6
+tag-foreground: #ffffff
+tiddler-background: &lt;&lt;colour background&gt;&gt;
+tiddler-border: &lt;&lt;colour background&gt;&gt;
+tiddler-controls-foreground-hover: #888888
+tiddler-controls-foreground-selected: #444444
+tiddler-controls-foreground: #cccccc
+tiddler-editor-background: #f8f8f8
+tiddler-editor-border-image: #ffffff
+tiddler-editor-border: #cccccc
+tiddler-editor-fields-even: #e0e8e0
+tiddler-editor-fields-odd: #f0f4f0
+tiddler-info-background: #f8f8f8
+tiddler-info-border: #dddddd
+tiddler-info-tab-background: #f8f8f8
+tiddler-link-background: &lt;&lt;colour background&gt;&gt;
+tiddler-link-foreground: &lt;&lt;colour primary&gt;&gt;
+tiddler-subtitle-foreground: #c0c0c0
+tiddler-title-foreground: #182955
+toolbar-new-button: 
+toolbar-options-button: 
+toolbar-save-button: 
+toolbar-info-button: 
+toolbar-edit-button: 
+toolbar-close-button: 
+toolbar-delete-button: 
+toolbar-cancel-button: 
+toolbar-done-button: 
+untagged-background: #999999
+very-muted-foreground: #888888</pre>
+</div>
 <div created="20190110153600782" modified="20190110153600782" title="$:/state/folded/startup connector">
 <pre>hide</pre>
 </div>
-<div created="20190110153602731" list="[[This is a dummy for the landing page]] [[startup connector]]" modified="20190110153602731" title="$:/StoryList">
+<div created="20190110210739496" modified="20190110210940297" title="$:/state/sidebar">
+<pre>yes</pre>
+</div>
+<div created="20190110160049506" modified="20190110160049506" title="$:/state/tab--1498284803">
+<pre>$:/core/ui/AdvancedSearch/Shadows</pre>
+</div>
+<div created="20190110210555461" modified="20190110210555461" title="$:/state/tab/moresidebar-1850697562">
+<pre>$:/core/ui/MoreSideBar/System</pre>
+</div>
+<div created="20190110210553961" modified="20190110211007514" title="$:/state/tab/sidebar--595412856">
+<pre>$:/core/ui/SideBar/Open</pre>
+</div>
+<div created="20190110210556662" list="[[pick a color]] [[This is a dummy for the landing page]] [[startup connector]]" modified="20190110210556662" title="$:/StoryList">
 <pre></pre>
+</div>
+<div created="20190110160047645" modified="20190110160047645" title="$:/temp/advancedsearch">
+<pre>color pick</pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
 <pre>{
@@ -9105,6 +9283,9 @@ Error message and password prompt
         }
     }
 }</pre>
+</div>
+<div created="20190110160044573" modified="20190110160047645" title="$:/temp/search">
+<pre></pre>
 </div>
 <div author="JeremyRuston" core-version="&gt;=5.0.0" dependents="$:/themes/tiddlywiki/vanilla" description="Emphasises individual tiddlers" name="Snow White" plugin-priority="0" plugin-type="theme" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.1.19">
 <pre>{
@@ -9214,6 +9395,9 @@ Error message and password prompt
         }
     }
 }</pre>
+</div>
+<div created="20190110160142441" modified="20190110160709278" tags="" title="pick a color">
+<pre>&lt;$macrocall $name=&quot;colour-picker&quot; actions=&quot;&quot;&quot;&lt;$action-setfield $tiddler={{$:/palette}} $index=&quot;page-background&quot; $value=&lt;&lt;colour-picker-value&gt;&gt;/&gt;&quot;&quot;&quot;/&gt;</pre>
 </div>
 <div created="20190110152725656" modified="20190110155303378" module-type="startup" tags="" title="startup connector" type="application/javascript">
 <pre>/*\
