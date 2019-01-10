@@ -127,8 +127,8 @@ public class MainActivity extends AppCompatActivity {
         //A folder used to store favicons from wikies
         path = String.valueOf(path) + File.separator + "favicons";
         File favTestfile = new File(path);
-        if(!favTestfile.getParentFile().exists()) {
-            favTestfile.getParentFile().mkdirs();
+        if(!favTestfile.exists()) {
+            favTestfile.mkdirs();
         }
     }
 
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         //Check for permissions and ask if necessary
         checkPermissions();
 
-        //TODO:Check if App-Folder in home directory exists, if not, set it up
+        //Check if App-Folder in home directory exists, if not, set it up
         checkLandingPageSetup();
 
         //Set the WebView up
