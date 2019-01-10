@@ -116,7 +116,6 @@ public class AtwWebAppInterface {
         });
     }
 
-    //TODO: on palette changes in wiki, if background changes, update system ui colors
     //window.twi.updateSystemColors($tw.wiki.extractTiddlerDataItem($tw.wiki.getTiddlerText('$:/palette'),'page-background'));
     @JavascriptInterface
     public void updateSystemColors(String colorString) {
