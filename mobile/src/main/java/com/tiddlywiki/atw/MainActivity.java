@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -323,6 +325,26 @@ public class MainActivity extends AppCompatActivity {
                     storageDir      /* directory */
             );
             return imageFile;
+        }
+
+        @Override
+        public void onReceivedIcon(WebView view, Bitmap icon) {
+            //handle favicon, put into landing-page favicons subfolder
+        }
+
+        @Override
+        public void onReceivedTitle(WebView view, String title) {
+            //TODO:handle site-title
+        }
+
+        @Override
+        public void onShowCustomView(View view, WebChromeClient.CustomViewCallback callback) {
+            //TODO:handle entering fullscreen
+        }
+
+        @Override
+        public void onHideCustomView() {
+            //TODO:handle leaving fullscreen
         }
     }
 }

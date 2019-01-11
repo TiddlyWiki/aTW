@@ -80,7 +80,7 @@ public class AtwWebViewClient extends WebViewClient {
                     }
                 });
         //set system system ui colors to wiki background
-        //TODO: when background changes, set colors again
+        //TODO: when background changes, set colors again // done on wiki-side
         mWebView.evaluateJavascript("javascript:$tw.wiki.extractTiddlerDataItem($tw.wiki.getTiddlerText('$:/palette'),'page-background');",
                 new ValueCallback<String>() {
                     @Override
