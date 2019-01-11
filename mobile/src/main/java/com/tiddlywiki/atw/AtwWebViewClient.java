@@ -1,12 +1,16 @@
 package com.tiddlywiki.atw;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 import android.view.Window;
 import android.webkit.ValueCallback;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -23,6 +27,24 @@ public class AtwWebViewClient extends WebViewClient {
         mContext = c;
         mWebView = v;
         mWindow = w;
+    }
+
+    //if for whatever reason the specified file cannot load, show something
+    //Got this from https://stackoverflow.com/questions/32769505/webviewclient-onreceivederror-deprecated-new-version-does-not-detect-all-errors/33419123#33419123
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+        // Handle the error
+        if(description.equals("net::ERR_FILE_NOT_FOUND") && failingUrl.equals(view.getUrl())) {
+            mWebView.loadUrl("file:///android_res/raw/page_not_found.html");
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError rerr) {
+        super.onReceivedError(view, req, rerr);
+        onReceivedError(view, rerr.getErrorCode(), rerr.getDescription().toString(), req.getUrl().toString());
     }
 
     @Override
