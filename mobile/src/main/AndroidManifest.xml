@@ -10,14 +10,15 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:documentLaunchMode="always"
+        android:configChanges="keyboardHidden|screenLayout|screenSize|smallestScreenSize|orientation">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:persistent="true"
             android:configChanges="keyboardHidden|screenLayout|screenSize|smallestScreenSize|orientation"
-            android:windowSoftInputMode="adjustResize"
-            >
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
