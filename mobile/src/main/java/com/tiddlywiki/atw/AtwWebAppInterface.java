@@ -1,7 +1,9 @@
 package com.tiddlywiki.atw;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.util.Log;
 import android.view.Window;
 import android.webkit.JavascriptInterface;

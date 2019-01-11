@@ -168,17 +168,27 @@ public class MainActivity extends AppCompatActivity {
         mWebSettings.setAllowUniversalAccessFromFileURLs(true);
 
         //Set a WebViewClient up
-        mWebView.setWebViewClient(new AtwWebViewClient(this,mWebView,getWindow()));
+        mWebView.setWebViewClient(new AtwWebViewClient(this, mWebView, getWindow()));
         //Set a WebChromeClient up
-        mWebView.setWebChromeClient(new AtwWebChromeClient(this));
+        mWebView.setWebChromeClient(new AtwWebChromeClient(this, getWindow()));
         //Add a JavascriptInterface that is accessible within the WebView: window.twi
-        mWebView.addJavascriptInterface(new AtwWebAppInterface(this,mWebView,getWindow()), "twi");
+        mWebView.addJavascriptInterface(new AtwWebAppInterface(this, mWebView, getWindow()), "twi");
+
+        //Determine the url that should be loaded in the webview
+        Bundle b = getIntent().getExtras();
+        String urlToLoad = null; // or other values
+        if (b != null) {
+            urlToLoad = b.getString("urlToLoad");
+        }
+        if(urlToLoad == null) {
+            urlToLoad = "file:///storage/emulated/0/aTW/LandingPage/landing_page.html";
+        }
 
         int fileAccessPermission = ContextCompat.checkSelfPermission(mContext,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if (fileAccessPermission == PackageManager.PERMISSION_GRANTED) {
-            mWebView.loadUrl("file:///storage/emulated/0/aTW/LandingPage/landing_page.html");
+            mWebView.loadUrl(urlToLoad);
         } else {
             mWebView.destroy();
         }
