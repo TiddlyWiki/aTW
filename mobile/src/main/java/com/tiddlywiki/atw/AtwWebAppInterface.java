@@ -2,8 +2,10 @@ package com.tiddlywiki.atw;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.Toast;
@@ -124,9 +126,28 @@ public class AtwWebAppInterface {
         if(colorString.length() == 4 && colorStringArray[0] == '#') {
             colorString = "#" + colorStringArray[1] + colorStringArray[1] + colorStringArray[2] + colorStringArray[2] + colorStringArray[3] + colorStringArray[3];
         }
+        final String colour = colorString;
         try {
-            mWindow.setStatusBarColor(Color.parseColor(colorString.replaceAll("\"","")));
-            mWindow.setNavigationBarColor(Color.parseColor(colorString.replaceAll("\"","")));
+            mWindow.setStatusBarColor(Color.parseColor(colorString.replaceAll("\"", "")));
+            mWindow.setNavigationBarColor(Color.parseColor(colorString.replaceAll("\"", "")));
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        try {
+            mWindow.setStatusBarColor(Color.parseColor(colorString.replaceAll("\"", "")));
+            mWindow.setNavigationBarColor(Color.parseColor(colorString.replaceAll("\"", "")));
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        try {
+            mWindow.setStatusBarColor(Color.parseColor(colorString.replaceAll("\"", "")));
+            mWindow.setNavigationBarColor(Color.parseColor(colorString.replaceAll("\"", "")));
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        try {
+            mWindow.setStatusBarColor(Color.parseColor(colorString.replaceAll("\"", "")));
+            mWindow.setNavigationBarColor(Color.parseColor(colorString.replaceAll("\"", "")));
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }

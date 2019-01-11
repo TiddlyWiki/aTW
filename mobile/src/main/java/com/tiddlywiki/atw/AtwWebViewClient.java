@@ -1,6 +1,8 @@
 package com.tiddlywiki.atw;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -77,6 +79,8 @@ public class AtwWebViewClient extends WebViewClient {
                     @Override
                     public void onReceiveValue(String s) {
                         saveLandingPageAsset(mWebView.getUrl(),"sitetitle",s);
+                        Activity activity = (Activity) mContext;
+                        activity.setTaskDescription(new ActivityManager.TaskDescription(s));
                     }
                 });
         //set system system ui colors to wiki background

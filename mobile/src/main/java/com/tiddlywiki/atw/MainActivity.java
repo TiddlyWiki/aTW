@@ -1,21 +1,26 @@
 package com.tiddlywiki.atw;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.renderscript.Script;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -31,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static android.content.ContentValues.TAG;
+import static android.view.Window.FEATURE_CONTENT_TRANSITIONS;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -156,6 +162,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getWindow().setFeatureInt(FEATURE_CONTENT_TRANSITIONS,12);
+
         //Check for permissions and ask if necessary
         checkPermissions();
 
@@ -208,9 +216,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (fileAccessPermission == PackageManager.PERMISSION_GRANTED) {
             mWebView.loadUrl(urlToLoad);
+            setTaskDescription(new ActivityManager.TaskDescription(urlToLoad));
         } else {
             mWebView.destroy();
         }
+
     }
 
     @Override
@@ -330,11 +340,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceivedIcon(WebView view, Bitmap icon) {
             //handle favicon, put into landing-page favicons subfolder
+            Drawable wikiIcon = new BitmapDrawable(getResources(), icon);
+            getSupportActionBar().setIcon(wikiIcon);
         }
 
         @Override
         public void onReceivedTitle(WebView view, String title) {
             //TODO:handle site-title
+            getWindow().setTitle(title);
         }
 
         @Override

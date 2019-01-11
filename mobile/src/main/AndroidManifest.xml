@@ -17,7 +17,7 @@
             android:persistent="true"
             android:configChanges="keyboardHidden|screenLayout|screenSize|smallestScreenSize|orientation"
             android:windowSoftInputMode="adjustResize"
-            android:documentLaunchMode="always">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
