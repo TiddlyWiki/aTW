@@ -9282,7 +9282,7 @@ margin-top: 0.5em;
 <div created="20190110160142441" modified="20190110160709278" tags="" title="pick a color">
 <pre>&lt;$macrocall $name=&quot;colour-picker&quot; actions=&quot;&quot;&quot;&lt;$action-setfield $tiddler={{$:/palette}} $index=&quot;page-background&quot; $value=&lt;&lt;colour-picker-value&gt;&gt;/&gt;&quot;&quot;&quot;/&gt;</pre>
 </div>
-<div created="20190110152725656" modified="20190111202254676" module-type="startup" tags="" title="startup connector" type="application/javascript">
+<div created="20190110152725656" modified="20190111231702591" module-type="startup" tags="" title="startup connector" type="application/javascript">
 <pre>/*\
 title: $:/core/modules/startup/atwconnector.js
 type: application/javascript
@@ -9308,44 +9308,11 @@ exports.synchronous = true;
 		var bgColor = $tw.wiki.extractTiddlerDataItem(palette,&quot;page-background&quot;);
 		var bgColorBefore = bgColor;
 
-		var colours = {&quot;aliceblue&quot;:&quot;#f0f8ff&quot;,&quot;antiquewhite&quot;:&quot;#faebd7&quot;,&quot;aqua&quot;:&quot;#00ffff&quot;,&quot;aquamarine&quot;:&quot;#7fffd4&quot;,&quot;azure&quot;:&quot;#f0ffff&quot;,
-			&quot;beige&quot;:&quot;#f5f5dc&quot;,&quot;bisque&quot;:&quot;#ffe4c4&quot;,&quot;black&quot;:&quot;#000000&quot;,&quot;blanchedalmond&quot;:&quot;#ffebcd&quot;,&quot;blue&quot;:&quot;#0000ff&quot;,&quot;blueviolet&quot;:&quot;#8a2be2&quot;,&quot;brown&quot;:&quot;#a52a2a&quot;,&quot;burlywood&quot;:&quot;#deb887&quot;,
-			&quot;cadetblue&quot;:&quot;#5f9ea0&quot;,&quot;chartreuse&quot;:&quot;#7fff00&quot;,&quot;chocolate&quot;:&quot;#d2691e&quot;,&quot;coral&quot;:&quot;#ff7f50&quot;,&quot;cornflowerblue&quot;:&quot;#6495ed&quot;,&quot;cornsilk&quot;:&quot;#fff8dc&quot;,&quot;crimson&quot;:&quot;#dc143c&quot;,&quot;cyan&quot;:&quot;#00ffff&quot;,
-			&quot;darkblue&quot;:&quot;#00008b&quot;,&quot;darkcyan&quot;:&quot;#008b8b&quot;,&quot;darkgoldenrod&quot;:&quot;#b8860b&quot;,&quot;darkgray&quot;:&quot;#a9a9a9&quot;,&quot;darkgreen&quot;:&quot;#006400&quot;,&quot;darkkhaki&quot;:&quot;#bdb76b&quot;,&quot;darkmagenta&quot;:&quot;#8b008b&quot;,&quot;darkolivegreen&quot;:&quot;#556b2f&quot;,
-			&quot;darkorange&quot;:&quot;#ff8c00&quot;,&quot;darkorchid&quot;:&quot;#9932cc&quot;,&quot;darkred&quot;:&quot;#8b0000&quot;,&quot;darksalmon&quot;:&quot;#e9967a&quot;,&quot;darkseagreen&quot;:&quot;#8fbc8f&quot;,&quot;darkslateblue&quot;:&quot;#483d8b&quot;,&quot;darkslategray&quot;:&quot;#2f4f4f&quot;,&quot;darkturquoise&quot;:&quot;#00ced1&quot;,
-			&quot;darkviolet&quot;:&quot;#9400d3&quot;,&quot;deeppink&quot;:&quot;#ff1493&quot;,&quot;deepskyblue&quot;:&quot;#00bfff&quot;,&quot;dimgray&quot;:&quot;#696969&quot;,&quot;dodgerblue&quot;:&quot;#1e90ff&quot;,
-			&quot;firebrick&quot;:&quot;#b22222&quot;,&quot;floralwhite&quot;:&quot;#fffaf0&quot;,&quot;forestgreen&quot;:&quot;#228b22&quot;,&quot;fuchsia&quot;:&quot;#ff00ff&quot;,
-			&quot;gainsboro&quot;:&quot;#dcdcdc&quot;,&quot;ghostwhite&quot;:&quot;#f8f8ff&quot;,&quot;gold&quot;:&quot;#ffd700&quot;,&quot;goldenrod&quot;:&quot;#daa520&quot;,&quot;gray&quot;:&quot;#808080&quot;,&quot;green&quot;:&quot;#008000&quot;,&quot;greenyellow&quot;:&quot;#adff2f&quot;,
-			&quot;honeydew&quot;:&quot;#f0fff0&quot;,&quot;hotpink&quot;:&quot;#ff69b4&quot;,
-			&quot;indianred &quot;:&quot;#cd5c5c&quot;,&quot;indigo&quot;:&quot;#4b0082&quot;,&quot;ivory&quot;:&quot;#fffff0&quot;,&quot;khaki&quot;:&quot;#f0e68c&quot;,
-			&quot;lavender&quot;:&quot;#e6e6fa&quot;,&quot;lavenderblush&quot;:&quot;#fff0f5&quot;,&quot;lawngreen&quot;:&quot;#7cfc00&quot;,&quot;lemonchiffon&quot;:&quot;#fffacd&quot;,&quot;lightblue&quot;:&quot;#add8e6&quot;,&quot;lightcoral&quot;:&quot;#f08080&quot;,&quot;lightcyan&quot;:&quot;#e0ffff&quot;,&quot;lightgoldenrodyellow&quot;:&quot;#fafad2&quot;,
-			&quot;lightgrey&quot;:&quot;#d3d3d3&quot;,&quot;lightgreen&quot;:&quot;#90ee90&quot;,&quot;lightpink&quot;:&quot;#ffb6c1&quot;,&quot;lightsalmon&quot;:&quot;#ffa07a&quot;,&quot;lightseagreen&quot;:&quot;#20b2aa&quot;,&quot;lightskyblue&quot;:&quot;#87cefa&quot;,&quot;lightslategray&quot;:&quot;#778899&quot;,&quot;lightsteelblue&quot;:&quot;#b0c4de&quot;,
-			&quot;lightyellow&quot;:&quot;#ffffe0&quot;,&quot;lime&quot;:&quot;#00ff00&quot;,&quot;limegreen&quot;:&quot;#32cd32&quot;,&quot;linen&quot;:&quot;#faf0e6&quot;,
-			&quot;magenta&quot;:&quot;#ff00ff&quot;,&quot;maroon&quot;:&quot;#800000&quot;,&quot;mediumaquamarine&quot;:&quot;#66cdaa&quot;,&quot;mediumblue&quot;:&quot;#0000cd&quot;,&quot;mediumorchid&quot;:&quot;#ba55d3&quot;,&quot;mediumpurple&quot;:&quot;#9370d8&quot;,&quot;mediumseagreen&quot;:&quot;#3cb371&quot;,&quot;mediumslateblue&quot;:&quot;#7b68ee&quot;,
-			&quot;mediumspringgreen&quot;:&quot;#00fa9a&quot;,&quot;mediumturquoise&quot;:&quot;#48d1cc&quot;,&quot;mediumvioletred&quot;:&quot;#c71585&quot;,&quot;midnightblue&quot;:&quot;#191970&quot;,&quot;mintcream&quot;:&quot;#f5fffa&quot;,&quot;mistyrose&quot;:&quot;#ffe4e1&quot;,&quot;moccasin&quot;:&quot;#ffe4b5&quot;,
-			&quot;navajowhite&quot;:&quot;#ffdead&quot;,&quot;navy&quot;:&quot;#000080&quot;,
-			&quot;oldlace&quot;:&quot;#fdf5e6&quot;,&quot;olive&quot;:&quot;#808000&quot;,&quot;olivedrab&quot;:&quot;#6b8e23&quot;,&quot;orange&quot;:&quot;#ffa500&quot;,&quot;orangered&quot;:&quot;#ff4500&quot;,&quot;orchid&quot;:&quot;#da70d6&quot;,
-			&quot;palegoldenrod&quot;:&quot;#eee8aa&quot;,&quot;palegreen&quot;:&quot;#98fb98&quot;,&quot;paleturquoise&quot;:&quot;#afeeee&quot;,&quot;palevioletred&quot;:&quot;#d87093&quot;,&quot;papayawhip&quot;:&quot;#ffefd5&quot;,&quot;peachpuff&quot;:&quot;#ffdab9&quot;,&quot;peru&quot;:&quot;#cd853f&quot;,&quot;pink&quot;:&quot;#ffc0cb&quot;,&quot;plum&quot;:&quot;#dda0dd&quot;,&quot;powderblue&quot;:&quot;#b0e0e6&quot;,&quot;purple&quot;:&quot;#800080&quot;,
-			&quot;rebeccapurple&quot;:&quot;#663399&quot;,&quot;red&quot;:&quot;#ff0000&quot;,&quot;rosybrown&quot;:&quot;#bc8f8f&quot;,&quot;royalblue&quot;:&quot;#4169e1&quot;,
-			&quot;saddlebrown&quot;:&quot;#8b4513&quot;,&quot;salmon&quot;:&quot;#fa8072&quot;,&quot;sandybrown&quot;:&quot;#f4a460&quot;,&quot;seagreen&quot;:&quot;#2e8b57&quot;,&quot;seashell&quot;:&quot;#fff5ee&quot;,&quot;sienna&quot;:&quot;#a0522d&quot;,&quot;silver&quot;:&quot;#c0c0c0&quot;,&quot;skyblue&quot;:&quot;#87ceeb&quot;,&quot;slateblue&quot;:&quot;#6a5acd&quot;,&quot;slategray&quot;:&quot;#708090&quot;,&quot;snow&quot;:&quot;#fffafa&quot;,&quot;springgreen&quot;:&quot;#00ff7f&quot;,&quot;steelblue&quot;:&quot;#4682b4&quot;,
-			&quot;tan&quot;:&quot;#d2b48c&quot;,&quot;teal&quot;:&quot;#008080&quot;,&quot;thistle&quot;:&quot;#d8bfd8&quot;,&quot;tomato&quot;:&quot;#ff6347&quot;,&quot;turquoise&quot;:&quot;#40e0d0&quot;,
-			&quot;violet&quot;:&quot;#ee82ee&quot;,
-			&quot;wheat&quot;:&quot;#f5deb3&quot;,&quot;white&quot;:&quot;#ffffff&quot;,&quot;whitesmoke&quot;:&quot;#f5f5f5&quot;,
-			&quot;yellow&quot;:&quot;#ffff00&quot;,&quot;yellowgreen&quot;:&quot;#9acd32&quot;};
-
-
-
 		$tw.wiki.addEventListener(&quot;change&quot;,function(changes) {
 			var bgColorTest;
 			if($tw.utils.hop(changes,&quot;$:/palette&quot;)) {
 				palette = $tw.wiki.getTiddlerText(&quot;$:/palette&quot;);
-				bgColorTest = $tw.wiki.extractTiddlerDataItem(palette,&quot;page-background&quot;);
-
-				if (typeof colours[bgColorTest.toLowerCase()] !== &quot;undefined&quot;) {
-					bgColor = colours[bgColorTest.toLowerCase()];
-				} else {
-					bgColor = bgColorTest;
-				}
+					bgColor = $tw.utils.parseCSSColor($tw.wiki.extractTiddlerDataItem(palette,&quot;page-background&quot;));
 				if (bgColorBefore !== bgColor) {
 					window.twi.updateSystemColors(bgColor);
 					bgColorBefore = bgColor;
@@ -9353,12 +9320,7 @@ exports.synchronous = true;
 			}
 			if($tw.utils.hop(changes,palette)) {
 				bgColorTest = $tw.wiki.extractTiddlerDataItem(palette,&quot;page-background&quot;);
-				var bgColorNew;
-				if (typeof colours[bgColorTest.toLowerCase()] !== &quot;undefined&quot;) {
-					bgColorNew = colours[bgColorTest.toLowerCase()];
-				} else {
-					bgColorNew = bgColorTest;
-				}
+				var bgColorNew = $tw.utils.parseCSSColor($tw.wiki.extractTiddlerDataItem(palette,&quot;page-background&quot;));
 				if(bgColorNew !== bgColor) {
 					window.twi.updateSystemColors(bgColorNew);
 					bgColor = bgColorNew;
