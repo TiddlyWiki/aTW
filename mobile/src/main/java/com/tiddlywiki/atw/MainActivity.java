@@ -2,20 +2,33 @@ package com.tiddlywiki.atw;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.webkit.JsResult;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 101;
     private static final int ACCESS_CAMERA_REQUEST_CODE = 102;
+    private static final int INPUT_FILE_REQUEST_CODE = 1;
+    private static final int PICK_FILE_REQUEST_CODE = 2;
+    private ValueCallback<Uri[]> mFilePathCallback;
+    private String mCameraPhotoPath;
 
     protected void makeWritePermissionRequest() {
         ActivityCompat.requestPermissions(this,
@@ -170,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         //Set a WebViewClient up
         mWebView.setWebViewClient(new AtwWebViewClient(this, mWebView, getWindow()));
         //Set a WebChromeClient up
-        mWebView.setWebChromeClient(new AtwWebChromeClient(this, getWindow()));
+        mWebView.setWebChromeClient(new AtwWebChromeClient());
         //Add a JavascriptInterface that is accessible within the WebView: window.twi
         mWebView.addJavascriptInterface(new AtwWebAppInterface(this, mWebView, getWindow()), "twi");
 
@@ -191,6 +208,121 @@ public class MainActivity extends AppCompatActivity {
             mWebView.loadUrl(urlToLoad);
         } else {
             mWebView.destroy();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+    }
+
+    final class AtwWebChromeClient extends WebChromeClient {
+
+        @Override
+        public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
+            new AlertDialog.Builder(mContext)
+                    .setTitle(R.string.tiddly_wiki)
+                    .setIcon(R.drawable.ic_launcher)
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.ok,
+                            new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    result.confirm();
+                                }
+                            })
+                    .setNegativeButton(android.R.string.cancel,
+                            new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    result.cancel();
+                                }
+                            })
+                    .create()
+                    .show();
+            return true;
+        }
+
+        @Override
+        public boolean onCreateWindow(WebView view, boolean dialog, boolean userGesture, android.os.Message resultMsg)
+        {
+            WebView.HitTestResult result = view.getHitTestResult();
+            String data = result.getExtra();
+            Intent newActivity = new Intent(mContext, MainActivity.class);
+            Bundle newBundle = new Bundle();
+            newBundle.putString("urlToLoad",data);
+            newActivity.putExtras(newBundle);
+            mContext.startActivity(newActivity);
+            return true;
+        }
+
+        public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> filePath, WebChromeClient.FileChooserParams fileChooserParams) {
+            // Double check that we don't have any existing callbacks
+            if (mFilePathCallback != null) {
+                mFilePathCallback.onReceiveValue(null);
+            }
+            mFilePathCallback = filePath;
+
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                // Create the File where the photo should go
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                    takePictureIntent.putExtra("PhotoPath", mCameraPhotoPath);
+                } catch (IOException ex) {
+                    // Error occurred while creating the File
+                    Log.e(TAG, "Unable to create Image File", ex);
+                }
+
+                // Continue only if the File was successfully created
+                if (photoFile != null) {
+                    mCameraPhotoPath = "file:" + photoFile.getAbsolutePath();
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                            Uri.fromFile(photoFile));
+                } else {
+                    takePictureIntent = null;
+                }
+            }
+
+            Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+            contentSelectionIntent.setType("*/*");
+
+            Intent[] intentArray;
+            if (takePictureIntent != null) {
+                intentArray = new Intent[]{takePictureIntent};
+            } else {
+                intentArray = new Intent[0];
+            }
+
+            Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+            chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+            chooserIntent.putExtra(Intent.EXTRA_TITLE, "File Chooser");
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+
+            if(mWebView.getUrl().equals("file:///storage/emulated/0/TW/LandingPage/landing_page.html")) {
+                startActivityForResult(contentSelectionIntent,PICK_FILE_REQUEST_CODE);
+            } else {
+                startActivityForResult(chooserIntent, INPUT_FILE_REQUEST_CODE);
+            }
+            return true;
+        }
+
+        private File createImageFile() throws IOException {
+            // Create an image file name
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String imageFileName = "JPEG_" + timeStamp + "_";
+            File storageDir = Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES);
+            File imageFile = File.createTempFile(
+                    imageFileName,  /* prefix */
+                    ".jpg",         /* suffix */
+                    storageDir      /* directory */
+            );
+            return imageFile;
         }
     }
 }
