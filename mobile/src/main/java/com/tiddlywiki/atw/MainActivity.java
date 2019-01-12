@@ -2,6 +2,7 @@ package com.tiddlywiki.atw;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static android.content.ContentValues.TAG;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT;
 import static android.view.Window.FEATURE_CONTENT_TRANSITIONS;
 
 public class MainActivity extends AppCompatActivity {

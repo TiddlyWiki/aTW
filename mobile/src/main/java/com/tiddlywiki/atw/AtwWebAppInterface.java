@@ -24,9 +24,9 @@ import java.util.Date;
 import static android.content.ContentValues.TAG;
 
 public class AtwWebAppInterface {
-    Context mContext;
-    WebView mWebView;
-    Window mWindow;
+    private Context mContext;
+    private WebView mWebView;
+    private Window mWindow;
 
     /** Instantiate the interface and set the context */
     AtwWebAppInterface(Context c, WebView v, Window w) {

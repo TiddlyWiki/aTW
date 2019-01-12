@@ -145,7 +145,11 @@ Error message and password prompt
 
 <li>$:/core</li>
 
+<li>$:/core/ui/TopBar/menu</li>
+
 <li>$:/DefaultTiddlers</li>
+
+<li>$:/Import</li>
 
 <li>$:/isEncrypted</li>
 
@@ -187,13 +191,54 @@ Error message and password prompt
 <!--~~ Ordinary tiddlers ~~-->
 
 <div id="storeArea" style="display:none;">
-<div created="20190110205331216" modified="20190110210930647" tags="$:/tags/Stylesheet" title="$:/_langing_page_styles">
+<div created="20190110205331216" modified="20190112101537174" tags="$:/tags/Stylesheet" title="$:/_langing_page_styles">
 <pre>.tc-tiddler-frame {
 margin-bottom: 0.5em;
 margin-left: 0.35em;
 margin-right: 0.35em;
 border-radius: 3px;
 box-shadow: 0px 3px rgba( 0, 0, 0, 0.1 );
+}
+
+.tc-topbar-right {
+top:inherit;
+bottom: 0.75em;
+left: 50%;
+right: 50%;
+}
+
+.tc-sidebar-scrollable {
+position:fixed;
+width: 100%;
+top: 50%;
+left:0;
+z-index:500;
+background-color: &lt;&lt;colour tiddler-background&gt;&gt;;
+box-shadow: 0px 3px rgba( 0, 0, 0, 0.1 );
+margin-left: 0.35em;
+margin-right: 0.35em;
+border-radius: 3px;
+}
+
+@media(max-width:{{$:/themes/tiddlywiki/vanilla/metrics/sidebarbreakpoint}}) {
+.tc-topbar-right {
+top:inherit;
+bottom: 0.75em;
+left: 50%;
+right: 50%;
+}
+.tc-sidebar-scrollable {
+position:fixed;
+width: 100%;
+top: 50%;
+left:0;
+z-index:500;
+background-color: &lt;&lt;colour tiddler-background&gt;&gt;;
+box-shadow: 0px 3px rgba( 0, 0, 0, 0.1 );
+margin-left: 0.35em;
+margin-right: 0.35em;
+border-radius: 3px;
+}
 }
 
 &lt;$reveal state=&quot;$:/state/sidebar&quot; type=&quot;match&quot; text=&quot;no&quot;&gt;
@@ -9086,8 +9131,23 @@ margin-top: 0.5em;
     }
 }</pre>
 </div>
+<div created="20190112094116946" modified="20190112094618978" tags="$:/tags/TopRightBar" title="$:/core/ui/TopBar/menu">
+<pre>&lt;$reveal state=&quot;$:/state/sidebar&quot; type=&quot;nomatch&quot; text=&quot;no&quot;&gt;
+&lt;$button set=&quot;$:/state/sidebar&quot; setTo=&quot;no&quot; tooltip={{$:/language/Buttons/HideSideBar/Hint}} aria-label={{$:/language/Buttons/HideSideBar/Caption}} class=&quot;tc-btn-invisible&quot;&gt;{{$:/core/images/chevron-down}}&lt;/$button&gt;
+&lt;/$reveal&gt;
+&lt;$reveal state=&quot;$:/state/sidebar&quot; type=&quot;match&quot; text=&quot;no&quot;&gt;
+&lt;$button set=&quot;$:/state/sidebar&quot; setTo=&quot;yes&quot; tooltip={{$:/language/Buttons/ShowSideBar/Hint}} aria-label={{$:/language/Buttons/ShowSideBar/Caption}} class=&quot;tc-btn-invisible&quot;&gt;{{$:/core/images/chevron-up}}&lt;/$button&gt;
+&lt;/$reveal&gt;
+</pre>
+</div>
 <div created="20190109192957999" modified="20190109192957999" title="$:/DefaultTiddlers">
 <pre>[list[$:/StoryList]]</pre>
+</div>
+<div status="complete" title="$:/Import">
+<pre>The following tiddlers were imported:
+
+# [[$:/_langing_page_styles]]
+# [[$:/core/ui/TopBar/menu]]</pre>
 </div>
 <div title="$:/isEncrypted">
 <pre>no</pre>
@@ -9095,7 +9155,7 @@ margin-top: 0.5em;
 <div created="20190110153600782" modified="20190110153600782" title="$:/state/folded/startup connector">
 <pre>hide</pre>
 </div>
-<div created="20190110210739496" modified="20190110210940297" title="$:/state/sidebar">
+<div created="20190110210739496" modified="20190112101546256" title="$:/state/sidebar">
 <pre>yes</pre>
 </div>
 <div created="20190110160049506" modified="20190110160049506" title="$:/state/tab--1498284803">
@@ -9104,10 +9164,10 @@ margin-top: 0.5em;
 <div created="20190110210555461" modified="20190110210555461" title="$:/state/tab/moresidebar-1850697562">
 <pre>$:/core/ui/MoreSideBar/System</pre>
 </div>
-<div created="20190110210553961" modified="20190110211600607" title="$:/state/tab/sidebar--595412856">
-<pre>$:/core/ui/SideBar/Open</pre>
+<div created="20190110210553961" modified="20190112095225086" title="$:/state/tab/sidebar--595412856">
+<pre>$:/core/ui/SideBar/More</pre>
 </div>
-<div list="[[pick a color]] [[This is a dummy for the landing page]] [[startup connector]]" title="$:/StoryList">
+<div created="20190112095225787" list="[[pick a color]] [[This is a dummy for the landing page]] [[startup connector]]" modified="20190112101516306" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20190110160047645" modified="20190110160047645" title="$:/temp/advancedsearch">
