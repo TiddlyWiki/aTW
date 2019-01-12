@@ -9282,7 +9282,7 @@ margin-top: 0.5em;
 <div created="20190110160142441" modified="20190110160709278" tags="" title="pick a color">
 <pre>&lt;$macrocall $name=&quot;colour-picker&quot; actions=&quot;&quot;&quot;&lt;$action-setfield $tiddler={{$:/palette}} $index=&quot;page-background&quot; $value=&lt;&lt;colour-picker-value&gt;&gt;/&gt;&quot;&quot;&quot;/&gt;</pre>
 </div>
-<div created="20190110152725656" modified="20190111231702591" module-type="startup" tags="" title="startup connector" type="application/javascript">
+<div created="20190110152725656" modified="20190112092421750" module-type="startup" tags="" title="startup connector" type="application/javascript">
 <pre>/*\
 title: $:/core/modules/startup/atwconnector.js
 type: application/javascript
@@ -9305,14 +9305,43 @@ exports.synchronous = true;
 
 	exports.startup = function() {
 		var palette = $tw.wiki.getTiddlerText(&quot;$:/palette&quot;);
-		var bgColor = $tw.wiki.extractTiddlerDataItem(palette,&quot;page-background&quot;);
+		var bgColor = $tw.utils.parseCSSColor($tw.wiki.extractTiddlerDataItem(palette,&quot;page-background&quot;));
 		var bgColorBefore = bgColor;
 
+		function padTwo(s) {
+			if(s.length === 1) {
+				s = &quot;0&quot; + s;
+			} else if(s.length === &quot;0&quot;) {
+				s = &quot;00&quot;;
+			}
+			return s;
+		}
+
+		function rgbaToHex (rgba) {
+			if(rgba === null || rgba === undefined) {
+				return (&quot;#f4f4f4&quot;);
+			}
+			var r = parseInt(rgba[0], 10),
+				g = parseInt(rgba[1], 10),
+				b = parseInt(rgba[2], 10);
+			var rString = padTwo(r.toString(16)),
+				gString = padTwo(g.toString(16)),
+				bString = padTwo(b.toString(16));
+			return (&quot;#&quot; + rString + gString + bString);
+		}
+
 		$tw.wiki.addEventListener(&quot;change&quot;,function(changes) {
-			var bgColorTest;
+			var bgColorTest,
+				parsedColor;
 			if($tw.utils.hop(changes,&quot;$:/palette&quot;)) {
 				palette = $tw.wiki.getTiddlerText(&quot;$:/palette&quot;);
-					bgColor = $tw.utils.parseCSSColor($tw.wiki.extractTiddlerDataItem(palette,&quot;page-background&quot;));
+				bgColorTest = $tw.wiki.extractTiddlerDataItem(palette,&quot;page-background&quot;);
+				parsedColor = rgbaToHex($tw.utils.parseCSSColor(bgColorTest));
+				if (parsedColor !== null &amp;&amp; parsedColor !== undefined) {
+					bgColor = parsedColor;
+				} else {
+					bgColor = bgColorTest;
+				}
 				if (bgColorBefore !== bgColor) {
 					window.twi.updateSystemColors(bgColor);
 					bgColorBefore = bgColor;
@@ -9320,7 +9349,13 @@ exports.synchronous = true;
 			}
 			if($tw.utils.hop(changes,palette)) {
 				bgColorTest = $tw.wiki.extractTiddlerDataItem(palette,&quot;page-background&quot;);
-				var bgColorNew = $tw.utils.parseCSSColor($tw.wiki.extractTiddlerDataItem(palette,&quot;page-background&quot;));
+				var bgColorNew;
+				parsedColor = rgbaToHex($tw.utils.parseCSSColor(bgColorTest));
+				if (parsedColor !== null &amp;&amp; parsedColor !== undefined) {
+					bgColorNew = parsedColor;
+				} else {
+					bgColorNew = bgColorTest;
+				}
 				if(bgColorNew !== bgColor) {
 					window.twi.updateSystemColors(bgColorNew);
 					bgColor = bgColorNew;
@@ -9330,8 +9365,7 @@ exports.synchronous = true;
 		});
 	};
 
-})();
-</pre>
+})();</pre>
 </div>
 <div created="20190109193001116" modified="20190109193011867" tags="" title="This is a dummy for the landing page">
 <pre></pre>

@@ -127,6 +127,9 @@ public class AtwWebAppInterface {
             colorString = "#" + colorStringArray[1] + colorStringArray[1] + colorStringArray[2] + colorStringArray[2] + colorStringArray[3] + colorStringArray[3];
         }
         final String colour = colorString;
+        //very hacky, but only repeating this multiple times it works on my device
+        //android emulator has no problems whatsoever with doing this only once
+        //TODO: find better solution
         try {
             mWindow.setStatusBarColor(Color.parseColor(colorString.replaceAll("\"", "")));
             mWindow.setNavigationBarColor(Color.parseColor(colorString.replaceAll("\"", "")));
