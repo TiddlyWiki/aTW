@@ -9185,7 +9185,7 @@ exports.startup = function() {
 <div created="20190110153600782" modified="20190110153600782" title="$:/state/folded/startup connector">
 <pre>hide</pre>
 </div>
-<div created="20190110210739496" modified="20190115171207669" title="$:/state/sidebar">
+<div created="20190110210739496" modified="20190115185012242" title="$:/state/sidebar">
 <pre>yes</pre>
 </div>
 <div created="20190110160049506" modified="20190110160049506" title="$:/state/tab--1498284803">
@@ -9372,7 +9372,7 @@ exports.startup = function() {
 <div created="20190110160142441" modified="20190110160709278" tags="" title="pick a color">
 <pre>&lt;$macrocall $name=&quot;colour-picker&quot; actions=&quot;&quot;&quot;&lt;$action-setfield $tiddler={{$:/palette}} $index=&quot;page-background&quot; $value=&lt;&lt;colour-picker-value&gt;&gt;/&gt;&quot;&quot;&quot;/&gt;</pre>
 </div>
-<div created="20190110152725656" modified="20190115171205522" module-type="utils" tags="" title="startup connector" type="application/javascript">
+<div created="20190110152725656" modified="20190115185006059" module-type="utils" tags="" title="startup connector" type="application/javascript">
 <pre>/*\
 title: $:/plugins/tiddlywiki/atw/modules/utils/android-connector.js
 type: application/javascript
@@ -9394,6 +9394,7 @@ android connector
 		this.bgColorBefore = this.bgColor;
 		$tw.wiki.addEventListener(&quot;change&quot;,function(changes) {
 			self.updateSystemColors(changes);
+			self.updateSiteTitles(changes);
 		});
 	};
 
@@ -9417,6 +9418,14 @@ android connector
 			gString = this.padTwo(g.toString(16)),
 			bString = this.padTwo(b.toString(16));
 		return (&quot;#&quot; + rString + gString + bString);
+	};
+
+	AndroidConnector.prototype.updateSiteTitles = function(changes) {
+		if($tw.utils.hop(changes,&quot;$:/SiteTitle&quot;)) {
+			window.twi.setSiteTitle('&quot;' + $tw.wiki.getTiddlerText(&quot;$:/SiteTitle&quot;) + '&quot;');
+		} else if($tw.utils.hop(changes,&quot;$:/SiteSubtitle&quot;)) {
+			window.twi.setSiteSubtitle('&quot;' + $tw.wiki.getTiddlerText(&quot;$:/SiteSubtitle&quot;) + '&quot;');
+		}
 	};
 
 	AndroidConnector.prototype.updateSystemColors = function(changes) {
@@ -9449,9 +9458,9 @@ android connector
 				finalColor = Math.abs(brightnessTarget - brightnessA) &gt; Math.abs(brightnessTarget - brightnessB) ? this.rgbaToHex(rgbColourA) : &quot;#ffffff&quot;;
 
 				if(finalColor === &quot;#ffffff&quot;) {
-					window.twi.setLightStatusbarFg();
-				} else {
 					window.twi.setDarkStatusbarFg();
+				} else {
+					window.twi.setLightStatusbarFg();
 				}
 				this.bgColorBefore = this.bgColor;
 			}
@@ -9479,9 +9488,9 @@ android connector
 				finalColor = Math.abs(brightnessTarget - brightnessA) &gt; Math.abs(brightnessTarget - brightnessB) ? this.rgbaToHex(rgbColourA) : &quot;#ffffff&quot;;
 
 				if(finalColor === &quot;#ffffff&quot;) {
-					window.twi.setLightStatusbarFg();
-				} else {
 					window.twi.setDarkStatusbarFg();
+				} else {
+					window.twi.setLightStatusbarFg();
 				}
 				this.bgColor = bgColorNew;
 				this.bgColorBefore = bgColorNew;

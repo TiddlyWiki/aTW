@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.webkit.WebView;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private static final int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 101;
     private static final int ACCESS_CAMERA_REQUEST_CODE = 102;
+
+    public static SubMenu subMenu;
 
     protected void makeWritePermissionRequest() {
         ActivityCompat.requestPermissions(this,
@@ -334,6 +337,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.getMenu().getItem(0).setChecked(true);
+        Menu menu = navigationView.getMenu();
+        subMenu = menu.addSubMenu(getString(R.string.nav_submenu_title));
         navigationView.setNavigationItemSelectedListener(this);
 
         int fileAccessPermission = ContextCompat.checkSelfPermission(mContext,
@@ -415,6 +420,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             urlToLoad = "file:///storage/emulated/0/aTW/LandingPage/landing_page.html";
         } else if (id == R.id.backstage_fragment) {
             urlToLoad = "file:///storage/emulated/0/aTW/LandingPage/BackStage/backstage.html";
+        } else {
+            urlToLoad = "file:///storage/emulated/0/" + String.valueOf(item);
         }
 
         try {
@@ -433,6 +440,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(fragment != null && fragmentManager.findFragmentByTag(urlToLoad) == null) {
             Fragment visibleFragment = getVisibleFragment(fragmentManager);
             ft.add(R.id.fullscreen_content, fragment, urlToLoad).addToBackStack(urlToLoad).show(visibleFragment).commit();
+            if (!urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/landing_page.html") && !urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/BackStage/backstage.html")) {
+                subMenu.add(urlToLoad.replaceFirst("file:///storage/emulated/0/",""));
+            }
         } else {
             Fragment visibleFragment = getVisibleFragment(fragmentManager);
             Fragment bringTopFragment = fragmentManager.findFragmentByTag(urlToLoad);
@@ -440,7 +450,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ft.hide(visibleFragment).show(bringTopFragment).commit();
             }
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

@@ -26,6 +26,8 @@ import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -37,6 +39,7 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tiddlywiki.atw.MainActivity;
 import com.tiddlywiki.atw.R;
 
 import java.io.File;
@@ -329,6 +332,9 @@ public class MainFragment extends Fragment {
             if(fragment != null && fragmentManager.findFragmentByTag(urlToLoad) == null) {
                 Fragment visibleFragment = getVisibleFragment(fragmentManager);
                 ft.add(R.id.fullscreen_content, fragment, urlToLoad).addToBackStack(urlToLoad).show(visibleFragment).commit();
+                if (!urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/landing_page.html") && !urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/BackStage/backstage.html")) {
+                    MainActivity.subMenu.add(urlToLoad.replaceFirst("file:///storage/emulated/0/",""));
+                }
             } else {
                 Fragment visibleFragment = getVisibleFragment(fragmentManager);
                 Fragment bringTopFragment = fragmentManager.findFragmentByTag(urlToLoad);

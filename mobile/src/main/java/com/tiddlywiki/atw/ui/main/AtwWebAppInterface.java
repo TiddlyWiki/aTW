@@ -81,18 +81,28 @@ public class AtwWebAppInterface {
 
     @JavascriptInterface
     public void setSiteTitle(final String sitetitle) {
-        NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
-        View headerView = navigationView.getHeaderView(0);
-        TextView siteTitle = (TextView) headerView.findViewById(R.id.siteTitle);
-        siteTitle.setText(sitetitle.substring(1,sitetitle.length() -1));
+        mWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
+                View headerView = navigationView.getHeaderView(0);
+                TextView siteTitle = (TextView) headerView.findViewById(R.id.siteTitle);
+                siteTitle.setText(sitetitle.substring(1, sitetitle.length() - 1));
+            }
+        });
     }
 
     @JavascriptInterface
     public void setSiteSubtitle(final String sitesubtitle) {
-        NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
-        View headerView = navigationView.getHeaderView(0);
-        TextView siteSubTitle = (TextView) headerView.findViewById(R.id.textView);
-        siteSubTitle.setText(sitesubtitle.substring(1,sitesubtitle.length() - 1));
+        mWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
+                View headerView = navigationView.getHeaderView(0);
+                TextView siteSubTitle = (TextView) headerView.findViewById(R.id.textView);
+                siteSubTitle.setText(sitesubtitle.substring(1, sitesubtitle.length() - 1));
+            }
+        });
     }
 
     @JavascriptInterface
