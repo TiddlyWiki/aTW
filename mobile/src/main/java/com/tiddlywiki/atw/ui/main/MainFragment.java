@@ -8,8 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,7 +19,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,10 +30,8 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tiddlywiki.atw.MainActivity;
 import com.tiddlywiki.atw.R;
 
 import java.io.File;
@@ -173,23 +168,7 @@ public class MainFragment extends Fragment {
                             if (newColor.length() == 4 && colorStringArray[0] == '#') {
                                 newColor = "#" + colorStringArray[1] + colorStringArray[1] + colorStringArray[2] + colorStringArray[2] + colorStringArray[3] + colorStringArray[3];
                             }
-                            mWebView.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        int newColor = Color.parseColor(colorString.replaceAll("\"", ""));
-                                        mWindow.setStatusBarColor(newColor);
-                                        mWindow.setNavigationBarColor(newColor);
-                                        DrawerLayout drawer = (DrawerLayout) mWindow.findViewById(R.id.drawer_layout);
-                                        NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
-                                        navigationView.setBackgroundColor(newColor);
-                                        //drawer.setScrimColor(newColor);
-                                        //drawer.setBackgroundColor(newColor);
-                                    } catch (Exception e) {
-                                        Log.e(TAG, e.getMessage());
-                                    }
-                                }
-                            });
+                            UtilMethods.setBackgroundColors(mWebView,mWindow,colorString.replaceAll("\"", ""));
                         }
                     });
             mWebView.evaluateJavascript("javascript:$tw.androidConnector.getWikiColorContrast('foreground','#ffffff');",//$tw.wiki.extractTiddlerDataItem($tw.wiki.getTiddlerText('$:/palette'),'foreground');",
@@ -211,62 +190,7 @@ public class MainFragment extends Fragment {
                                 decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
                             }
 
-                            mWebView.post(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    try {
-                                        int newColor = Color.parseColor(colorString.replaceAll("\"", ""));
-                                        DrawerLayout drawer = (DrawerLayout) mWindow.findViewById(R.id.drawer_layout);
-                                        //drawer.setOutlineAmbientShadowColor(newColor);
-                                        //drawer.setOutlineSpotShadowColor(newColor);
-                                        //drawer.setScrimColor(newColor);
-                                        NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
-                                        // FOR NAVIGATION VIEW ITEM TEXT COLOR
-                                        int[][] state = new int[][]{
-                                                new int[]{-android.R.attr.state_enabled}, // disabled
-                                                new int[]{android.R.attr.state_enabled}, // enabled
-                                                new int[]{-android.R.attr.state_checked}, // unchecked
-                                                new int[]{android.R.attr.state_pressed}  // pressed
-
-                                        };
-
-                                        // FOR NAVIGATION VIEW ITEM ICON COLOR
-                                        int[][] states = new int[][]{
-                                                new int[]{-android.R.attr.state_enabled}, // disabled
-                                                new int[]{android.R.attr.state_enabled}, // enabled
-                                                new int[]{-android.R.attr.state_checked}, // unchecked
-                                                new int[]{android.R.attr.state_pressed}  // pressed
-
-                                        };
-
-                                        int[] colors = new int[]{
-                                                newColor,
-                                                newColor,
-                                                newColor,
-                                                newColor
-                                        };
-
-                                        int[] color = new int[]{
-                                                newColor,
-                                                newColor,
-                                                newColor,
-                                                newColor
-                                        };
-                                        navigationView.setItemTextColor(new ColorStateList(state, color));
-                                        navigationView.setItemIconTintList(new ColorStateList(states, colors));
-                                        View headerView = navigationView.getHeaderView(0);
-                                        TextView navText = (TextView) headerView.findViewById(R.id.textView);
-                                        navText.setTextColor(new ColorStateList(state, color));
-                                        mWindow.getDecorView().setForegroundTintList(new ColorStateList(state, color));
-
-                                        //drawer.setScrimColor(newColor);
-                                        //drawer.setBackgroundColor(newColor);
-                                    } catch (Exception e) {
-                                        Log.e(TAG, e.getMessage());
-                                    }
-                                }
-                            });
+                            UtilMethods.setForegroundColors(mWebView,mWindow,colorString.replaceAll("\"", ""));
                         }
                     });
             mWebView.evaluateJavascript("javascript:$tw.wiki.getTiddlerText('$:/SiteTitle');",//$tw.wiki.extractTiddlerDataItem($tw.wiki.getTiddlerText('$:/palette'),'foreground');",
@@ -351,11 +275,6 @@ public class MainFragment extends Fragment {
         {
             WebView.HitTestResult result = view.getHitTestResult();
             String urlToLoad = result.getExtra();
-            /*Intent newActivity = new Intent(view.getContext(), MainActivity.class);
-            Bundle newBundle = new Bundle();
-            newBundle.putString("urlToLoad",data);
-            newActivity.putExtras(newBundle);
-            view.getContext().startActivity(newActivity);*/
             Fragment fragment = null;
             Class fragmentClass = MainFragment.class;
 

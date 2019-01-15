@@ -153,21 +153,6 @@ public class AtwWebAppInterface {
         if (newColor.length() == 4 && colorStringArray[0] == '#') {
             newColor = "#" + colorStringArray[1] + colorStringArray[1] + colorStringArray[2] + colorStringArray[2] + colorStringArray[3] + colorStringArray[3];
         }
-
-        mWebView.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    mWindow.setStatusBarColor(Color.parseColor(colorString.replaceAll("\"", "")));
-                    mWindow.setNavigationBarColor(Color.parseColor(colorString.replaceAll("\"", "")));
-                    DrawerLayout drawer = (DrawerLayout) mWindow.findViewById(R.id.drawer_layout);
-                    NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
-                    navigationView.setBackgroundColor(Color.parseColor(colorString.replaceAll("\"", "")));
-                    drawer.setBackgroundColor(Color.parseColor(colorString.replaceAll("\"", "")));
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
-                }
-            }
-        });
+        UtilMethods.setBackgroundColors(mWebView,mWindow,colorString.replaceAll("\"", ""));
     }
 }
