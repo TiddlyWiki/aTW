@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -187,7 +188,11 @@ public class MainFragment extends Fragment {
                                 decor.setSystemUiVisibility(0);
                             } else {
                                 View decor = mWindow.getDecorView();
-                                decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+                                if (Build.VERSION.SDK_INT >= 26) {
+                                    decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+                                } else {
+                                    decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                                }
                             }
 
                             UtilMethods.setForegroundColors(mWebView,mWindow,colorString.replaceAll("\"", ""));

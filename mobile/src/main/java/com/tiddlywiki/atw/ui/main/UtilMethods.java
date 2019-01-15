@@ -2,6 +2,7 @@ package com.tiddlywiki.atw.ui.main;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -24,7 +25,9 @@ public class UtilMethods {
                 try {
                     int newColor = Color.parseColor(color);
                     mWindow.setStatusBarColor(newColor);
-                    mWindow.setNavigationBarColor(newColor);
+                    if (Build.VERSION.SDK_INT >= 26) {
+                        mWindow.setNavigationBarColor(newColor);
+                    }
                     DrawerLayout drawer = (DrawerLayout) mWindow.findViewById(R.id.drawer_layout);
                     NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
                     navigationView.setBackgroundColor(newColor);
