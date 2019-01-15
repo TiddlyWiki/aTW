@@ -9366,7 +9366,7 @@ exports.startup = function() {
     }
 }</pre>
 </div>
-<div created="20190110152725656" modified="20190115141902541" module-type="utils" tags="" title="startup connector" type="application/javascript">
+<div created="20190110152725656" modified="20190115171225813" module-type="utils" tags="" title="startup connector" type="application/javascript">
 <pre>/*\
 title: $:/plugins/tiddlywiki/atw/modules/utils/android-connector.js
 type: application/javascript
@@ -9383,7 +9383,7 @@ android connector
 
 	var AndroidConnector = function() {
 		var self = this;
-this.palette = $tw.wiki.getTiddlerText(&quot;$:/palette&quot;);
+		this.palette = $tw.wiki.getTiddlerText(&quot;$:/palette&quot;);
 		this.bgColor = $tw.utils.parseCSSColor($tw.wiki.extractTiddlerDataItem(this.palette,&quot;page-background&quot;));
 		this.bgColorBefore = this.bgColor;
 		$tw.wiki.addEventListener(&quot;change&quot;,function(changes) {
@@ -9415,7 +9415,11 @@ this.palette = $tw.wiki.getTiddlerText(&quot;$:/palette&quot;);
 
 	AndroidConnector.prototype.updateSystemColors = function(changes) {
 		var bgColorTest,
-			parsedColor;
+			parsedColor,
+			brightnessTarget,
+			brightnessA,
+			brightnessB,
+			finalColor;
 		if($tw.utils.hop(changes,&quot;$:/palette&quot;)) {
 			this.palette = $tw.wiki.getTiddlerText(&quot;$:/palette&quot;);
 			bgColorTest = $tw.wiki.extractTiddlerDataItem(this.palette,&quot;page-background&quot;);
@@ -9428,21 +9432,21 @@ this.palette = $tw.wiki.getTiddlerText(&quot;$:/palette&quot;);
 			if (this.bgColorBefore !== this.bgColor) {
 				window.twi.updateSystemColors(this.bgColor);
 
-var rgbTarget = $tw.utils.parseCSSColor(this.bgColor),
-rgbColourA = $tw.utils.parseCSSColor($tw.wiki.extractTiddlerDataItem(this.palette,&quot;foreground&quot;)),
-rgbColourB = $tw.utils.parseCSSColor(&quot;#ffffff&quot;);
+				var rgbTarget = $tw.utils.parseCSSColor(this.bgColor),
+					rgbColourA = $tw.utils.parseCSSColor($tw.wiki.extractTiddlerDataItem(this.palette,&quot;foreground&quot;)),
+					rgbColourB = $tw.utils.parseCSSColor(&quot;#ffffff&quot;);
 
-	var brightnessTarget = rgbTarget[0] * 0.299 + rgbTarget[1] * 0.587 + rgbTarget[2] * 0.114,
-		brightnessA = rgbColourA[0] * 0.299 + rgbColourA[1] * 0.587 + rgbColourA[2] * 0.114,
-		brightnessB = rgbColourB[0] * 0.299 + rgbColourB[1] * 0.587 + rgbColourB[2] * 0.114;
+				brightnessTarget = rgbTarget[0] * 0.299 + rgbTarget[1] * 0.587 + rgbTarget[2] * 0.114,
+				brightnessA = rgbColourA[0] * 0.299 + rgbColourA[1] * 0.587 + rgbColourA[2] * 0.114,
+				brightnessB = rgbColourB[0] * 0.299 + rgbColourB[1] * 0.587 + rgbColourB[2] * 0.114;
 
-var finalColor = Math.abs(brightnessTarget - brightnessA) &gt; Math.abs(brightnessTarget - brightnessB) ? this.rgbaToHex(rgbColourA) : &quot;#ffffff&quot;;
+				finalColor = Math.abs(brightnessTarget - brightnessA) &gt; Math.abs(brightnessTarget - brightnessB) ? this.rgbaToHex(rgbColourA) : &quot;#ffffff&quot;;
 
-if(finalColor === &quot;#ffffff&quot;) {
-window.twi.setDarkStatusbarFg();
-} else {
-window.twi.setLightStatusbarFg();
-}
+				if(finalColor === &quot;#ffffff&quot;) {
+					window.twi.setLightStatusbarFg();
+				} else {
+					window.twi.setDarkStatusbarFg();
+				}
 				this.bgColorBefore = this.bgColor;
 			}
 		}
@@ -9458,21 +9462,21 @@ window.twi.setLightStatusbarFg();
 			if(bgColorNew !== this.bgColor) {
 				window.twi.updateSystemColors(bgColorNew);
 
-var rgbTarget = $tw.utils.parseCSSColor(bgColorNew),
-rgbColourA = $tw.utils.parseCSSColor($tw.wiki.extractTiddlerDataItem(this.palette,&quot;foreground&quot;)),
-rgbColourB = $tw.utils.parseCSSColor(&quot;#ffffff&quot;);
+				rgbTarget = $tw.utils.parseCSSColor(bgColorNew),
+				rgbColourA = $tw.utils.parseCSSColor($tw.wiki.extractTiddlerDataItem(this.palette,&quot;foreground&quot;)),
+				rgbColourB = $tw.utils.parseCSSColor(&quot;#ffffff&quot;);
 
-	var brightnessTarget = rgbTarget[0] * 0.299 + rgbTarget[1] * 0.587 + rgbTarget[2] * 0.114,
-		brightnessA = rgbColourA[0] * 0.299 + rgbColourA[1] * 0.587 + rgbColourA[2] * 0.114,
-		brightnessB = rgbColourB[0] * 0.299 + rgbColourB[1] * 0.587 + rgbColourB[2] * 0.114;
+				brightnessTarget = rgbTarget[0] * 0.299 + rgbTarget[1] * 0.587 + rgbTarget[2] * 0.114,
+				brightnessA = rgbColourA[0] * 0.299 + rgbColourA[1] * 0.587 + rgbColourA[2] * 0.114,
+				brightnessB = rgbColourB[0] * 0.299 + rgbColourB[1] * 0.587 + rgbColourB[2] * 0.114;
 
-var finalColor = Math.abs(brightnessTarget - brightnessA) &gt; Math.abs(brightnessTarget - brightnessB) ? this.rgbaToHex(rgbColourA) : &quot;#ffffff&quot;;
+				finalColor = Math.abs(brightnessTarget - brightnessA) &gt; Math.abs(brightnessTarget - brightnessB) ? this.rgbaToHex(rgbColourA) : &quot;#ffffff&quot;;
 
-if(finalColor === &quot;#ffffff&quot;) {
-window.twi.setDarkStatusbarFg();
-} else {
-window.twi.setLightStatusbarFg();
-}
+				if(finalColor === &quot;#ffffff&quot;) {
+					window.twi.setLightStatusbarFg();
+				} else {
+					window.twi.setDarkStatusbarFg();
+				}
 				this.bgColor = bgColorNew;
 				this.bgColorBefore = bgColorNew;
 			}
@@ -9482,7 +9486,7 @@ window.twi.setLightStatusbarFg();
 	AndroidConnector.prototype.getWikiColor = function(colorname) {
 		var bgColorTest,
 			parsedColor,
-result;
+			result;
 		bgColorTest = $tw.wiki.extractTiddlerDataItem(this.palette,colorname);
 		parsedColor = this.rgbaToHex($tw.utils.parseCSSColor(bgColorTest));
 		if (parsedColor !== null &amp;&amp; parsedColor !== undefined) {
@@ -9496,7 +9500,7 @@ result;
 	AndroidConnector.prototype.getWikiColorContrast = function(colorname,fallbackColor) {
 		var bgColorTest,
 			parsedColor,
-result;
+			result;
 		bgColorTest = $tw.wiki.extractTiddlerDataItem(this.palette,colorname);
 		parsedColor = $tw.utils.parseCSSColor(bgColorTest);
 		if (parsedColor !== null &amp;&amp; parsedColor !== undefined) {
@@ -9505,17 +9509,17 @@ result;
 			result = bgColorTest;
 		}
 
-var rgbTarget = $tw.utils.parseCSSColor($tw.wiki.extractTiddlerDataItem(this.palette,&quot;page-background&quot;)),
-rgbColourA = result,
-rgbColourB = $tw.utils.parseCSSColor(fallbackColor);
+		var rgbTarget = $tw.utils.parseCSSColor($tw.wiki.extractTiddlerDataItem(this.palette,&quot;page-background&quot;)),
+			rgbColourA = result,
+			rgbColourB = $tw.utils.parseCSSColor(fallbackColor);
 
-	var brightnessTarget = rgbTarget[0] * 0.299 + rgbTarget[1] * 0.587 + rgbTarget[2] * 0.114,
-		brightnessA = rgbColourA[0] * 0.299 + rgbColourA[1] * 0.587 + rgbColourA[2] * 0.114,
-		brightnessB = rgbColourB[0] * 0.299 + rgbColourB[1] * 0.587 + rgbColourB[2] * 0.114;
+		var brightnessTarget = rgbTarget[0] * 0.299 + rgbTarget[1] * 0.587 + rgbTarget[2] * 0.114,
+			brightnessA = rgbColourA[0] * 0.299 + rgbColourA[1] * 0.587 + rgbColourA[2] * 0.114,
+			brightnessB = rgbColourB[0] * 0.299 + rgbColourB[1] * 0.587 + rgbColourB[2] * 0.114;
 
-var finalColor = Math.abs(brightnessTarget - brightnessA) &gt; Math.abs(brightnessTarget - brightnessB) ? this.rgbaToHex(result) : fallbackColor;
+		var finalColor = Math.abs(brightnessTarget - brightnessA) &gt; Math.abs(brightnessTarget - brightnessB) ? this.rgbaToHex(result) : fallbackColor;
 
-return finalColor;
+		return finalColor;
 	};
 
 	exports.AndroidConnector = AndroidConnector;

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.support.design.widget.NavigationView;
 import android.view.View;
 import android.view.Window;
 import android.webkit.ValueCallback;
@@ -15,6 +16,9 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
+
+import com.tiddlywiki.atw.R;
 
 public class AtwWebViewClient extends WebViewClient {
 
@@ -82,21 +86,35 @@ public class AtwWebViewClient extends WebViewClient {
 
     @Override
     public void onPageFinished(final WebView view, String url) {
+        mWebView.evaluateJavascript("javascript:$tw.wiki.getTiddlerText('$:/SiteTitle');",//$tw.wiki.extractTiddlerDataItem($tw.wiki.getTiddlerText('$:/palette'),'foreground');",
+                new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String sitetitle) {
+                        NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
+                        View headerView = navigationView.getHeaderView(0);
+                        TextView siteTitle = (TextView) headerView.findViewById(R.id.siteTitle);
+                        siteTitle.setText(sitetitle.substring(1,sitetitle.length() -1));
+                        saveLandingPageAsset(mWebView.getUrl(),"sitetitle",sitetitle);
+                        Activity activity = (Activity) mContext;
+                        activity.setTaskDescription(new ActivityManager.TaskDescription(sitetitle));
+                    }
+                });
+        mWebView.evaluateJavascript("javascript:$tw.wiki.getTiddlerText('$:/SiteSubtitle');",//$tw.wiki.extractTiddlerDataItem($tw.wiki.getTiddlerText('$:/palette'),'foreground');",
+                new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String sitesubtitle) {
+                        NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
+                        View headerView = navigationView.getHeaderView(0);
+                        TextView siteSubTitle = (TextView) headerView.findViewById(R.id.textView);
+                        siteSubTitle.setText(sitesubtitle.substring(1,sitesubtitle.length() - 1));
+                    }
+                });
         //extract favicon and siteTitle from wiki, for use in landing page
         mWebView.evaluateJavascript("javascript:$tw.wiki.getTiddlerText('favicon.ico');",
                 new ValueCallback<String>() {
                     @Override
                     public void onReceiveValue(String s) {
                         saveLandingPageAsset(mWebView.getUrl(),"favicon",s);
-                    }
-                });
-        mWebView.evaluateJavascript("javascript:$tw.wiki.getTiddlerText('$:/SiteTitle');",
-                new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String s) {
-                        saveLandingPageAsset(mWebView.getUrl(),"sitetitle",s);
-                        Activity activity = (Activity) mContext;
-                        activity.setTaskDescription(new ActivityManager.TaskDescription(s));
                     }
                 });
         //set system system ui colors to wiki background

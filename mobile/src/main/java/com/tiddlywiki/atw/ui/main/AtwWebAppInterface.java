@@ -1,14 +1,15 @@
 package com.tiddlywiki.atw.ui.main;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.os.Build;
 import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tiddlywiki.atw.R;
@@ -44,6 +45,27 @@ public class AtwWebAppInterface {
         Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
     }
 
+    private void setForegroundColors() {
+        mWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                mWebView.evaluateJavascript("javascript:$tw.androidConnector.getWikiColorContrast('foreground','#ffffff');",//$tw.wiki.extractTiddlerDataItem($tw.wiki.getTiddlerText('$:/palette'),'foreground');",
+                        new ValueCallback<String>() {
+                            @Override
+                            public void onReceiveValue(final String colorString) {
+                                //Convert color string if it's of the form #aaa
+                                String newColor = colorString.replaceAll("\"", "");
+                                char[] colorStringArray = newColor.toCharArray();
+                                if (newColor.length() == 4 && colorStringArray[0] == '#') {
+                                    newColor = "#" + colorStringArray[1] + colorStringArray[1] + colorStringArray[2] + colorStringArray[2] + colorStringArray[3] + colorStringArray[3];
+                                }
+                                UtilMethods.setForegroundColors(mWebView,mWindow,colorString.replaceAll("\"", ""));
+                            }
+                        });
+            }
+        });
+    }
+
     @JavascriptInterface
     public void setLightStatusbarFg() {
 
@@ -54,6 +76,23 @@ public class AtwWebAppInterface {
                 decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
             }
         });
+        setForegroundColors();
+    }
+
+    @JavascriptInterface
+    public void setSiteTitle(final String sitetitle) {
+        NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView siteTitle = (TextView) headerView.findViewById(R.id.siteTitle);
+        siteTitle.setText(sitetitle.substring(1,sitetitle.length() -1));
+    }
+
+    @JavascriptInterface
+    public void setSiteSubtitle(final String sitesubtitle) {
+        NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView siteSubTitle = (TextView) headerView.findViewById(R.id.textView);
+        siteSubTitle.setText(sitesubtitle.substring(1,sitesubtitle.length() - 1));
     }
 
     @JavascriptInterface
@@ -65,6 +104,7 @@ public class AtwWebAppInterface {
                 decor.setSystemUiVisibility(0);
             }
         });
+        setForegroundColors();
     }
 
     @JavascriptInterface

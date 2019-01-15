@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +34,7 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tiddlywiki.atw.R;
@@ -135,17 +139,43 @@ public class MainFragment extends Fragment {
 
     }
 
+    public Bitmap StringToBitMap(String encodedString){
+        try{
+            byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);
+            Bitmap bitmap=BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }catch(Exception e){
+            e.getMessage();
+            return null;
+        }
+    }
+
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-
 
             mWebView.evaluateJavascript("javascript:$tw.wiki.getTiddlerText('favicon.ico');",
                     new ValueCallback<String>() {
                         @Override
                         public void onReceiveValue(String s) {
                             saveLandingPageAsset(mWebView.getUrl(), "favicon", s);
+                            if(s != null && !s.equals("") && !s.equals("null") && !s.equals("undefined")) {
+                                try {
+                                    Bitmap faviconBitmap = StringToBitMap(s);
+                                    NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
+                                    View headerView = navigationView.getHeaderView(0);
+                                    ImageView navImage = (ImageView) headerView.findViewById(R.id.imageView);
+                                    navImage.setImageBitmap(faviconBitmap);
+                                } catch (Exception e) {
+                                    Log.e(TAG, e.getMessage());
+                                }
+                            } else {
+                                NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
+                                View headerView = navigationView.getHeaderView(0);
+                                ImageView navImage = (ImageView) headerView.findViewById(R.id.imageView);
+                                navImage.setImageResource(R.drawable.ic_launcher);
+                            }
                         }
                     });
             mWebView.evaluateJavascript("javascript:$tw.wiki.getTiddlerText('$:/SiteTitle');",
