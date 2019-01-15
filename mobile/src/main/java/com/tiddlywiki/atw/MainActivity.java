@@ -1,56 +1,47 @@
 package com.tiddlywiki.atw;
 
 import android.Manifest;
-import android.app.ActivityManager;
-import android.content.ComponentName;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.renderscript.Script;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.webkit.JsResult;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
+import android.support.design.widget.NavigationView;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 
-import static android.content.ContentValues.TAG;
-import static android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT;
-import static android.view.Window.FEATURE_CONTENT_TRANSITIONS;
+import com.tiddlywiki.atw.ui.main.MainFragment;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     final Context mContext = this;
-    private WebView mWebView;
 
     private static final int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 101;
     private static final int ACCESS_CAMERA_REQUEST_CODE = 102;
-    private static final int INPUT_FILE_REQUEST_CODE = 1;
-    private static final int PICK_FILE_REQUEST_CODE = 2;
-    private ValueCallback<Uri[]> mFilePathCallback;
-    private String mCameraPhotoPath;
 
     protected void makeWritePermissionRequest() {
         ActivityCompat.requestPermissions(this,
@@ -92,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
                 } else if (ContextCompat.checkSelfPermission(mContext,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
-                    mWebView.loadUrl("file:///storage/emulated/0/aTW/LandingPage/landing_page.html");
+                    //mWebView.loadUrl("file:///storage/emulated/0/aTW/LandingPage/landing_page.html");
                     int cameraAccessPermission = ContextCompat.checkSelfPermission(mContext,
                             Manifest.permission.CAMERA);
                     if (cameraAccessPermission != PackageManager.PERMISSION_GRANTED) {
@@ -138,6 +129,11 @@ public class MainActivity extends AppCompatActivity {
         copyRawFile(String.valueOf(path), "missing_favicon.png", "missing_favicon");
     }
 
+    protected void makeBackstagePage() {
+        File path = new File("/storage/emulated/0" + File.separator + "aTW" + File.separator + "LandingPage" + File.separator + "Backstage");
+        copyRawFile(String.valueOf(path), "page_not_found.html", "page_not_found");
+    }
+
     private void checkLandingPageSetup() {
         File extStoragePath = Environment.getExternalStorageDirectory();
         String path = String.valueOf(extStoragePath) + File.separator + "aTW" + File.separator + "LandingPage";
@@ -151,6 +147,17 @@ public class MainActivity extends AppCompatActivity {
             makeLandingPage();
         }
 
+        path = String.valueOf(extStoragePath) + File.separator + "aTW" + File.separator + "LandingPage" + File.separator + "Backstage";
+        testFile = new File(path);
+        if(!testFile.getParentFile().exists()) {
+            testFile.getParentFile().mkdirs();
+        }
+
+        if (!testFile.exists()) {
+            testFile.mkdirs();
+            makeBackstagePage();
+        }
+
         //A folder used to store favicons from wikies
         path = String.valueOf(path) + File.separator + "favicons";
         File favTestfile = new File(path);
@@ -159,12 +166,164 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * Whether or not the system UI should be auto-hidden after
+     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
+     */
+    private static final boolean AUTO_HIDE = false;
+
+    /**
+     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
+     * user interaction before hiding the system UI.
+     */
+    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+
+    /**
+     * Some older devices needs a small delay between UI widget updates
+     * and a change of the status and navigation bar.
+     */
+    private static final int UI_ANIMATION_DELAY = 300;
+    private final Handler mHideHandler = new Handler();
+    private View mContentView;
+
+    private final Runnable mHidePart2Runnable = new Runnable() {
+        @SuppressLint("InlinedApi")
+        @Override
+        public void run() {
+            // Delayed removal of status and navigation bar
+
+            // Note that some of these constants are new as of API 16 (Jelly Bean)
+            // and API 19 (KitKat). It is safe to use them, as they are inlined
+            // at compile-time and do nothing on earlier devices.
+            mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        }
+    };
+
+    //private View mControlsView;
+    private final Runnable mShowPart2Runnable = new Runnable() {
+        @Override
+        public void run() {
+            // Delayed display of UI elements
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.show();
+            }
+            //mControlsView.setVisibility(View.VISIBLE);
+        }
+    };
+
+    private boolean mVisible;
+    private final Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hide();
+        }
+    };
+    /**
+     * Touch listener to use for in-layout UI controls to delay hiding the
+     * system UI. This is to prevent the jarring behavior of controls going away
+     * while interacting with activity UI.
+     */
+    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            return false;
+        }
+    };
+
+    private void toggle() {
+        if (mVisible) {
+            hide();
+        } else {
+            show();
+        }
+    }
+
+    private void hide() {
+        // Hide UI first
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+        //mControlsView.setVisibility(View.GONE);
+        mVisible = false;
+
+        // Schedule a runnable to remove the status and navigation bar after a delay
+        mHideHandler.removeCallbacks(mShowPart2Runnable);
+        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
+    }
+
+    @SuppressLint("InlinedApi")
+    private void show() {
+        // Show the system bar
+        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+        mVisible = true;
+
+        // Schedule a runnable to display UI elements after a delay
+        mHideHandler.removeCallbacks(mHidePart2Runnable);
+        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
+    }
+
+    /**
+     * Schedules a call to hide() in delay milliseconds, canceling any
+     * previously scheduled calls.
+     */
+    private void delayedHide(int delayMillis) {
+        mHideHandler.removeCallbacks(mHideRunnable);
+        mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        getWindow().setFeatureInt(FEATURE_CONTENT_TRANSITIONS,12);
 
         //Check for permissions and ask if necessary
         checkPermissions();
@@ -172,194 +331,120 @@ public class MainActivity extends AppCompatActivity {
         //Check if App-Folder in home directory exists, if not, set it up
         checkLandingPageSetup();
 
-        //Set the WebView up
-        mWebView = (WebView) findViewById(R.id.atw_main_layout);
-        //Documentation at https://developer.android.com/reference/android/webkit/WebSettings
-        //Worth having a look what makes sense to enable/disable
-        WebSettings mWebSettings = mWebView.getSettings();
-        //Enable Javascript
-        mWebSettings.setJavaScriptEnabled(true);
-        // Zoom and MultiTouch
-        mWebSettings.setSupportZoom(true);
-        mWebSettings.setBuiltInZoomControls(true);
-        mWebSettings.setDisplayZoomControls(false);
-        mWebSettings.setAppCacheEnabled(true);
-        mWebSettings.setDomStorageEnabled(true);
-        mWebSettings.setSupportMultipleWindows(true);
-        mWebSettings.setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
-        mWebSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        mWebSettings.setDatabaseEnabled(true);
-        mWebSettings.setDomStorageEnabled(true);
-        mWebSettings.setUseWideViewPort(true);
-        mWebSettings.setLoadWithOverviewMode(true);
-        mWebSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        mWebSettings.setAllowFileAccessFromFileURLs(true);
-        mWebSettings.setAllowUniversalAccessFromFileURLs(true);
-
-        //Set a WebViewClient up
-        mWebView.setWebViewClient(new AtwWebViewClient(this, mWebView, getWindow()));
-        //Set a WebChromeClient up
-        mWebView.setWebChromeClient(new AtwWebChromeClient());
-        //Add a JavascriptInterface that is accessible within the WebView: window.twi
-        mWebView.addJavascriptInterface(new AtwWebAppInterface(this, mWebView, getWindow()), "twi");
-
-        //Determine the url that should be loaded in the webview
-        Bundle b = getIntent().getExtras();
-        String urlToLoad = null; // or other values
-        if (b != null) {
-            urlToLoad = b.getString("urlToLoad");
-        }
-        if(urlToLoad == null) {
-            urlToLoad = "file:///storage/emulated/0/aTW/LandingPage/landing_page.html";
-        }
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.getMenu().getItem(0).setChecked(true);
+        navigationView.setNavigationItemSelectedListener(this);
 
         int fileAccessPermission = ContextCompat.checkSelfPermission(mContext,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if (fileAccessPermission == PackageManager.PERMISSION_GRANTED) {
-            mWebView.loadUrl(urlToLoad);
-            setTaskDescription(new ActivityManager.TaskDescription(urlToLoad));
-        } else {
-            mWebView.destroy();
-        }
 
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fullscreen_content, MainFragment.newInstance(),"file:///storage/emulated/0/aTW/LandingPage/landing_page.html")
+                        .commitNow();
+            }
+
+        }
+    }
+
+    int leave = 0;
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 
-    final class AtwWebChromeClient extends WebChromeClient {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-        @Override
-        public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
-            new AlertDialog.Builder(mContext)
-                    .setTitle(R.string.tiddly_wiki)
-                    .setIcon(R.drawable.ic_launcher)
-                    .setMessage(message)
-                    .setPositiveButton(android.R.string.ok,
-                            new DialogInterface.OnClickListener()
-                            {
-                                public void onClick(DialogInterface dialog, int which)
-                                {
-                                    result.confirm();
-                                }
-                            })
-                    .setNegativeButton(android.R.string.cancel,
-                            new DialogInterface.OnClickListener()
-                            {
-                                public void onClick(DialogInterface dialog, int which)
-                                {
-                                    result.cancel();
-                                }
-                            })
-                    .create()
-                    .show();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
             return true;
         }
 
-        @Override
-        public boolean onCreateWindow(WebView view, boolean dialog, boolean userGesture, android.os.Message resultMsg)
-        {
-            WebView.HitTestResult result = view.getHitTestResult();
-            String data = result.getExtra();
-            Intent newActivity = new Intent(mContext, MainActivity.class);
-            Bundle newBundle = new Bundle();
-            newBundle.putString("urlToLoad",data);
-            newActivity.putExtras(newBundle);
-            mContext.startActivity(newActivity);
-            return true;
-        }
+        return super.onOptionsItemSelected(item);
+    }
 
-        public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> filePath, WebChromeClient.FileChooserParams fileChooserParams) {
-            // Double check that we don't have any existing callbacks
-            if (mFilePathCallback != null) {
-                mFilePathCallback.onReceiveValue(null);
+    public Fragment getVisibleFragment(FragmentManager m){
+        List<Fragment> fragments = m.getFragments();
+        for(Fragment fragment : fragments){
+            if(fragment != null && fragment.isVisible())
+                return fragment;
+        }
+        return null;
+    }
+
+    public void hideAllFragments(FragmentManager m, FragmentTransaction ft, String tag, Fragment f) {
+        List<Fragment> fragments = m.getFragments();
+        for(Fragment fragment : fragments){
+            if((fragment.getArguments() == null | (fragment.getArguments() != null && fragment.getArguments().getString("urlToLoad") != f.getArguments().getString("urlToLoad"))) && fragment.getTag() != null && !fragment.getTag().equals(tag)) {
+                ft.hide(fragment);
             }
-            mFilePathCallback = filePath;
+        }
+    }
 
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                // Create the File where the photo should go
-                File photoFile = null;
-                try {
-                    photoFile = createImageFile();
-                    takePictureIntent.putExtra("PhotoPath", mCameraPhotoPath);
-                } catch (IOException ex) {
-                    // Error occurred while creating the File
-                    Log.e(TAG, "Unable to create Image File", ex);
-                }
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
 
-                // Continue only if the File was successfully created
-                if (photoFile != null) {
-                    mCameraPhotoPath = "file:" + photoFile.getAbsolutePath();
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                            Uri.fromFile(photoFile));
-                } else {
-                    takePictureIntent = null;
-                }
+        Fragment fragment = null;
+        Class fragmentClass = MainFragment.class;
+        String urlToLoad = "";
+
+        if (id == R.id.landing_page_fragment) {
+            // Handle the camera action
+            urlToLoad = "file:///storage/emulated/0/aTW/LandingPage/landing_page.html";
+        } else if (id == R.id.backstage_fragment) {
+            urlToLoad = "file:///storage/emulated/0/aTW/LandingPage/BackStage/backstage.html";
+        }
+
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+            Bundle loadBundle = new Bundle();
+            loadBundle.putString("urlToLoad",urlToLoad);
+            fragment.setArguments(loadBundle);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        hideAllFragments(fragmentManager,ft,urlToLoad,fragment);
+
+        if(fragment != null && fragmentManager.findFragmentByTag(urlToLoad) == null) {
+            Fragment visibleFragment = getVisibleFragment(fragmentManager);
+            ft.add(R.id.fullscreen_content, fragment, urlToLoad).addToBackStack(urlToLoad).show(visibleFragment).commit();
+        } else {
+            Fragment visibleFragment = getVisibleFragment(fragmentManager);
+            Fragment bringTopFragment = fragmentManager.findFragmentByTag(urlToLoad);
+            if(visibleFragment != null && bringTopFragment != null) {
+                ft.hide(visibleFragment).show(bringTopFragment).commit();
             }
-
-            Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
-            contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
-            contentSelectionIntent.setType("*/*");
-
-            Intent[] intentArray;
-            if (takePictureIntent != null) {
-                intentArray = new Intent[]{takePictureIntent};
-            } else {
-                intentArray = new Intent[0];
-            }
-
-            Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
-            chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
-            chooserIntent.putExtra(Intent.EXTRA_TITLE, "File Chooser");
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
-
-            if(mWebView.getUrl().equals("file:///storage/emulated/0/TW/LandingPage/landing_page.html")) {
-                startActivityForResult(contentSelectionIntent,PICK_FILE_REQUEST_CODE);
-            } else {
-                startActivityForResult(chooserIntent, INPUT_FILE_REQUEST_CODE);
-            }
-            return true;
         }
 
-        private File createImageFile() throws IOException {
-            // Create an image file name
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String imageFileName = "JPEG_" + timeStamp + "_";
-            File storageDir = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES);
-            File imageFile = File.createTempFile(
-                    imageFileName,  /* prefix */
-                    ".jpg",         /* suffix */
-                    storageDir      /* directory */
-            );
-            return imageFile;
-        }
-
-        @Override
-        public void onReceivedIcon(WebView view, Bitmap icon) {
-            //handle favicon, put into landing-page favicons subfolder
-            Drawable wikiIcon = new BitmapDrawable(getResources(), icon);
-            getSupportActionBar().setIcon(wikiIcon);
-        }
-
-        @Override
-        public void onReceivedTitle(WebView view, String title) {
-            //TODO:handle site-title
-            getWindow().setTitle(title);
-        }
-
-        @Override
-        public void onShowCustomView(View view, WebChromeClient.CustomViewCallback callback) {
-            //TODO:handle entering fullscreen
-        }
-
-        @Override
-        public void onHideCustomView() {
-            //TODO:handle leaving fullscreen
-        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
+

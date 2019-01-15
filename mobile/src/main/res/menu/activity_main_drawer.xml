@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/landing_page_fragment"
+            android:title="@string/landing_page" />
+        <item
+            android:id="@+id/backstage_fragment"
+            android:title="@string/backstage" />
+
+    </group>
+
+    <group android:id="@+id/open_wikies">
+
+
+    </group>
+
+</menu>

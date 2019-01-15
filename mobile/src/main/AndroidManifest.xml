@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tiddlywiki.atw">
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -11,15 +12,15 @@
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:configChanges="keyboardHidden|screenLayout|screenSize|smallestScreenSize|orientation"
+        android:configChanges="keyboardHidden|screenLayout|screenSize|smallestScreenSize|orientation|keyboard|uiMode"
         >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:persistent="true"
-            android:configChanges="keyboardHidden|screenLayout|screenSize|smallestScreenSize|orientation"
+            android:configChanges="keyboardHidden|screenLayout|screenSize|smallestScreenSize|orientation|keyboard|uiMode"
             android:windowSoftInputMode="adjustResize"
-            android:documentLaunchMode="always">
+            android:documentLaunchMode="intoExisting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
