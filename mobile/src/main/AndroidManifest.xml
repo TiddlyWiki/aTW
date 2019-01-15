@@ -19,8 +19,7 @@
             android:label="@string/app_name"
             android:persistent="true"
             android:configChanges="keyboardHidden|screenLayout|screenSize|smallestScreenSize|orientation|keyboard|uiMode"
-            android:windowSoftInputMode="adjustResize"
-            android:documentLaunchMode="intoExisting">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />

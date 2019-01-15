@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.webkit.WebView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -348,8 +349,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
     }
-
-    int leave = 0;
 
     @Override
     public void onBackPressed() {
