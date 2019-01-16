@@ -2,11 +2,15 @@ package com.tiddlywiki.atw;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.DocumentsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -24,6 +28,7 @@ import android.view.MotionEvent;
 import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,7 +37,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 import com.tiddlywiki.atw.ui.main.MainFragment;
-
+import com.tiddlywiki.atw.ui.main.UtilMethods;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -314,16 +319,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-
-
-
-
-
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String action = intent.getAction();
+        setIntent(intent);
+        if (Intent.ACTION_VIEW.equals(action)) {
+            String intentData = DocumentsContract.getDocumentId(getIntent().getData()).replaceFirst("raw:","");//UtilMethods.getPath(mContext,intent.getData());//DocumentsContract.getDocumentId(intent.getData()).replaceFirst("raw:","");
+            String urlToLoad;
+            Fragment fragment = (Fragment) MainFragment.newInstance();
+            urlToLoad = "file://" + intentData;
+            Bundle loadBundle = new Bundle();
+            loadBundle.putString("urlToLoad", "file://" + intentData);
+            fragment.setArguments(loadBundle);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            hideAllFragments(getSupportFragmentManager(), ft, urlToLoad, fragment);
+            ft.add(R.id.fullscreen_content, fragment, urlToLoad).commit();
+            if (!urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/landing_page.html") && !urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/BackStage/backstage.html")) {
+                subMenu.add(urlToLoad.replaceFirst("file:///storage/emulated/0/",""));
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        if(savedInstanceState == null) {
+            setContentView(R.layout.activity_main);
+        }
 
         //Check for permissions and ask if necessary
         checkPermissions();
@@ -340,7 +363,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int fileAccessPermission = ContextCompat.checkSelfPermission(mContext,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-        if (fileAccessPermission == PackageManager.PERMISSION_GRANTED) {
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (fileAccessPermission == PackageManager.PERMISSION_GRANTED && !Intent.ACTION_VIEW.equals(action)) {
 
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
@@ -348,6 +375,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .commitNow();
             }
 
+        } else if (Intent.ACTION_VIEW.equals(action)) {
+            String intentData = DocumentsContract.getDocumentId(getIntent().getData()).replaceFirst("raw:","");
+            String urlToLoad = "file://" + intentData;
+            Fragment fragment = (Fragment) MainFragment.newInstance();
+            urlToLoad = "file://" + intentData;
+            Bundle loadBundle = new Bundle();
+            loadBundle.putString("urlToLoad", "file://" + intentData);
+            fragment.setArguments(loadBundle);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            hideAllFragments(getSupportFragmentManager(), ft, urlToLoad, fragment);
+            ft.replace(R.id.fullscreen_content, fragment, urlToLoad).commit();
+            if (!urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/landing_page.html") && !urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/BackStage/backstage.html")) {
+                subMenu.add(urlToLoad.replaceFirst("file:///storage/emulated/0/",""));
+            }
         }
     }
 

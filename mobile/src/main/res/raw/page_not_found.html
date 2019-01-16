@@ -145,6 +145,8 @@ Error message and password prompt
 
 <li>$:/core</li>
 
+<li>$:/core/ui/PageTemplate/sidebar</li>
+
 <li>$:/core/ui/TopBar/menu</li>
 
 <li>$:/DefaultTiddlers</li>
@@ -191,7 +193,7 @@ Error message and password prompt
 <!--~~ Ordinary tiddlers ~~-->
 
 <div id="storeArea" style="display:none;">
-<div created="20190110205331216" modified="20190115201821041" tags="$:/tags/Stylesheet" title="$:/_langing_page_styles">
+<div created="20190110205331216" modified="20190115221628231" tags="$:/tags/Stylesheet" title="$:/_langing_page_styles">
 <pre>.tc-tiddler-frame {
 margin-bottom: 0.5em;
 margin-left: 0.35em;
@@ -211,10 +213,12 @@ text-align:center;
 
 .tc-sidebar-scrollable {
 position:fixed;
-width: 100%;
+width: calc(100% - 0.7em);
 top: 50%;
 min-height:50%;
 border-top:2px solid &lt;&lt;colour muted-foreground&gt;&gt;;
+border-left:2px solid &lt;&lt;colour muted-foreground&gt;&gt;;
+border-right:2px solid &lt;&lt;colour muted-foreground&gt;&gt;;
 left:0;
 z-index:500;
 background-color: &lt;&lt;colour tiddler-background&gt;&gt;;
@@ -222,7 +226,8 @@ box-shadow: 0px 3px rgba( 0, 0, 0, 0.1 );
 margin-left: 0.35em;
 margin-right: 0.35em;
 border-radius: 3px;
-overflow-y:scroll;
+overflow-y:scroll !important;
+max-width: calc(100% - 0.7em);
 }
 
 @media(max-width:{{$:/themes/tiddlywiki/vanilla/metrics/sidebarbreakpoint}}) {
@@ -236,10 +241,12 @@ text-align:center;
 }
 .tc-sidebar-scrollable {
 position:fixed;
-width: 100%;
+width: calc(100% - 0.7em);
 top: 50%;
 min-height:50%;
 border-top:2px solid &lt;&lt;colour muted-foreground&gt;&gt;;
+border-left:2px solid &lt;&lt;colour muted-foreground&gt;&gt;;
+border-right:2px solid &lt;&lt;colour muted-foreground&gt;&gt;;
 left:0;
 z-index:500;
 background-color: &lt;&lt;colour tiddler-background&gt;&gt;;
@@ -247,7 +254,8 @@ box-shadow: 0px 3px rgba( 0, 0, 0, 0.1 );
 margin-left: 0.35em;
 margin-right: 0.35em;
 border-radius: 3px;
-overflow-y:scroll;
+overflow-y:scroll !important;
+max-width:calc(100% - 0.7em);
 }
 }
 
@@ -9141,6 +9149,33 @@ display: none;
     }
 }</pre>
 </div>
+<div created="20190115220925757" modified="20190115220926562" tags="$:/tags/PageTemplate" title="$:/core/ui/PageTemplate/sidebar">
+<pre>\define config-title()
+$:/config/SideBarSegments/Visibility/$(listItem)$
+\end
+
+&lt;$scrollable class=&quot;tc-sidebar-scrollable&quot;&gt;
+
+&lt;div class=&quot;tc-sidebar-header&quot;&gt;
+
+&lt;$reveal state=&quot;$:/state/sidebar&quot; type=&quot;match&quot; text=&quot;yes&quot; default=&quot;yes&quot; retain=&quot;yes&quot; animate=&quot;yes&quot;&gt;
+
+&lt;$list filter=&quot;[all[shadows+tiddlers]tag[$:/tags/SideBarSegment]!has[draft.of]]&quot; variable=&quot;listItem&quot;&gt;
+
+&lt;$reveal type=&quot;nomatch&quot; state=&lt;&lt;config-title&gt;&gt; text=&quot;hide&quot;  tag=&quot;div&quot;&gt;
+
+&lt;$transclude tiddler=&lt;&lt;listItem&gt;&gt; mode=&quot;block&quot;/&gt;
+
+&lt;/$reveal&gt;
+
+&lt;/$list&gt;
+
+&lt;/$reveal&gt;
+
+&lt;/div&gt;
+
+&lt;/$scrollable&gt;</pre>
+</div>
 <div created="20190112094116946" modified="20190112094618978" tags="$:/tags/TopRightBar" title="$:/core/ui/TopBar/menu">
 <pre>&lt;$reveal state=&quot;$:/state/sidebar&quot; type=&quot;nomatch&quot; text=&quot;no&quot;&gt;
 &lt;$button set=&quot;$:/state/sidebar&quot; setTo=&quot;no&quot; tooltip={{$:/language/Buttons/HideSideBar/Hint}} aria-label={{$:/language/Buttons/HideSideBar/Caption}} class=&quot;tc-btn-invisible&quot;&gt;{{$:/core/images/chevron-down}}&lt;/$button&gt;
@@ -9201,14 +9236,14 @@ exports.startup = function() {
 <div created="20190110210555461" modified="20190110210555461" title="$:/state/tab/moresidebar-1850697562">
 <pre>$:/core/ui/MoreSideBar/System</pre>
 </div>
-<div created="20190110210553961" modified="20190112095041534" title="$:/state/tab/sidebar--595412856">
+<div created="20190110210553961" modified="20190115221622363" title="$:/state/tab/sidebar--595412856">
 <pre>$:/core/ui/SideBar/More</pre>
 </div>
-<div created="20190115201242057" list="$:/_langing_page_styles [[There's no such page :'''(]] [[startup connector]]" modified="20190115201242057" title="$:/StoryList">
+<div created="20190115221623313" list="[[There's no such page :'''(]] [[startup connector]]" modified="20190115221623313" title="$:/StoryList">
 <pre></pre>
 </div>
-<div created="20190110160047645" modified="20190112094108256" title="$:/temp/advancedsearch">
-<pre>topbar menu</pre>
+<div created="20190110160047645" modified="20190115220917675" title="$:/temp/advancedsearch">
+<pre>pagetemplate/sidebar</pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
 <pre>{
@@ -9264,7 +9299,7 @@ exports.startup = function() {
     }
 }</pre>
 </div>
-<div created="20190110160044573" modified="20190112094108256" title="$:/temp/search">
+<div created="20190110160044573" modified="20190115220917675" title="$:/temp/search">
 <pre></pre>
 </div>
 <div author="JeremyRuston" core-version="&gt;=5.0.0" dependents="$:/themes/tiddlywiki/vanilla" description="Emphasises individual tiddlers" name="Snow White" plugin-priority="0" plugin-type="theme" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.1.19">

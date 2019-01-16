@@ -22,6 +22,12 @@ import com.tiddlywiki.atw.R;
 
 public class AtwWebViewClient extends WebViewClient {
 
+    /* Downloads
+    Intent downloadIntent = new Intent(this, DownloadService.class);
+downloadIntent.setData(Uri.parse(fileUrl));
+startService(downloadIntent);
+     */
+
     private Context mContext;
     private WebView mWebView;
     private Window mWindow;
