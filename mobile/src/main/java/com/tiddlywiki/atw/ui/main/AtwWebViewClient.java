@@ -91,6 +91,9 @@ startService(downloadIntent);
 
     @Override
     public void onPageFinished(final WebView view, String url) {
+        mWebView.evaluateJavascript("javascript:$tw.rootWidget.invokeActionString('" +
+                "<$list filter=\"[[$:/plugins/tiddlywiki/aTW]is[missing]]\">" +
+                "<$action-sendmessage $message=\"tm-load-plugin-from-library\" title=\"$:/plugins/tiddlywiki/aTW\" url=\"https://tiddlywiki.github.io/aTW/index.html\"/></$list>');", null);
         mWebView.evaluateJavascript("javascript:$tw.wiki.getTiddlerText('$:/SiteTitle');",//$tw.wiki.extractTiddlerDataItem($tw.wiki.getTiddlerText('$:/palette'),'foreground');",
                 new ValueCallback<String>() {
                     @Override
