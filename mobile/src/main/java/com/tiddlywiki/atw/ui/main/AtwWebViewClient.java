@@ -20,6 +20,13 @@ import android.widget.TextView;
 
 import com.tiddlywiki.atw.R;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 public class AtwWebViewClient extends WebViewClient {
 
     /* Downloads
@@ -91,9 +98,30 @@ startService(downloadIntent);
 
     @Override
     public void onPageFinished(final WebView view, String url) {
-        /*mWebView.evaluateJavascript("javascript:$tw.rootWidget.invokeActionString('" +
-                "<$list filter=\"[[$:/plugins/tiddlywiki/aTW/modules/startup/initialise.js]is[missing]]\">" +
-                "<$action-sendmessage $message=\"tm-load-plugin-from-library\" title=\"$:/plugins/tiddlywiki/aTW/modules/startup/initialise.js\" url=\"http://atwtestingpluginlibrary.tiddlyspot.com\"/></$list>');", null);*/
+        //Get the text file
+        InputStream in = mContext.getResources().openRawResource(
+                mContext.getResources().getIdentifier("raw/android_connector",
+                        "raw", mContext.getPackageName()));
+
+        StringBuilder text = new StringBuilder();
+
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
+            }
+            br.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //IMPORTANT: this loads the wiki-side android-communication logic!
+        mWebView.evaluateJavascript("javascript:var AndroidConnector = " + text.toString() + "; $tw.androidConnector = new AndroidConnector;",null);
+
         mWebView.evaluateJavascript("javascript:$tw.wiki.getTiddlerText('$:/SiteTitle');",//$tw.wiki.extractTiddlerDataItem($tw.wiki.getTiddlerText('$:/palette'),'foreground');",
                 new ValueCallback<String>() {
                     @Override
