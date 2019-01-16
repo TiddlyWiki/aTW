@@ -155,8 +155,6 @@ Error message and password prompt
 
 <li>$:/isEncrypted</li>
 
-<li>$:/plugins/tiddlywiki/atw/modules/startup/initialise.js</li>
-
 <li>$:/state/folded/startup connector</li>
 
 <li>$:/state/sidebar</li>
@@ -180,8 +178,6 @@ Error message and password prompt
 <li>$:/themes/tiddlywiki/vanilla</li>
 
 <li>pick a color</li>
-
-<li>startup connector</li>
 
 <li>This is a dummy for the landing page</li>
 
@@ -9199,38 +9195,10 @@ $:/config/SideBarSegments/Visibility/$(listItem)$
 <div title="$:/isEncrypted">
 <pre>no</pre>
 </div>
-<div created="20190115101824512" modified="20190115102030554" module-type="startup" tags="" title="$:/plugins/tiddlywiki/atw/modules/startup/initialise.js" type="application/javascript">
-<pre>/*\
-title: $:/plugins/tiddlywiki/atw/modules/startup/initialise.js
-type: application/javascript
-module-type: startup
-
-Setup the aTW handlers
-
-\*/
-(function(){
-
-/*jslint node: true, browser: true */
-/*global $tw: false */
-&quot;use strict&quot;;
-
-// Export name and synchronous status
-exports.name = &quot;atwhandlers&quot;;
-exports.platforms = [&quot;browser&quot;];
-exports.after = [&quot;startup&quot;];
-exports.synchronous = true;
-
-exports.startup = function() {
-	$tw.androidConnector = new $tw.utils.AndroidConnector();
-};
-
-})();
-</pre>
-</div>
 <div created="20190110153600782" modified="20190110153600782" title="$:/state/folded/startup connector">
 <pre>hide</pre>
 </div>
-<div created="20190110210739496" modified="20190115221605549" title="$:/state/sidebar">
+<div created="20190110210739496" modified="20190116164550700" title="$:/state/sidebar">
 <pre>yes</pre>
 </div>
 <div created="20190110160049506" modified="20190110160049506" title="$:/state/tab--1498284803">
@@ -9242,7 +9210,7 @@ exports.startup = function() {
 <div created="20190110210553961" modified="20190115221406904" title="$:/state/tab/sidebar--595412856">
 <pre>$:/core/ui/SideBar/More</pre>
 </div>
-<div created="20190115221419628" list="[[pick a color]] [[This is a dummy for the landing page]] [[startup connector]]" modified="20190115221419628" title="$:/StoryList">
+<div created="20190116164541884" list="[[pick a color]] [[This is a dummy for the landing page]]" modified="20190116164541884" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20190110160047645" modified="20190115220752903" title="$:/temp/advancedsearch">
@@ -9416,175 +9384,6 @@ exports.startup = function() {
 </div>
 <div created="20190110160142441" modified="20190110160709278" tags="" title="pick a color">
 <pre>&lt;$macrocall $name=&quot;colour-picker&quot; actions=&quot;&quot;&quot;&lt;$action-setfield $tiddler={{$:/palette}} $index=&quot;page-background&quot; $value=&lt;&lt;colour-picker-value&gt;&gt;/&gt;&quot;&quot;&quot;/&gt;</pre>
-</div>
-<div created="20190110152725656" modified="20190115185006059" module-type="utils" tags="" title="startup connector" type="application/javascript">
-<pre>/*\
-title: $:/plugins/tiddlywiki/atw/modules/utils/android-connector.js
-type: application/javascript
-module-type: utils
-
-android connector
-
-\*/
-(function(){
-
-/*jslint node: true, browser: true */
-/*global $tw: false */
-&quot;use strict&quot;;
-
-	var AndroidConnector = function() {
-		var self = this;
-		this.palette = $tw.wiki.getTiddlerText(&quot;$:/palette&quot;);
-		this.bgColor = $tw.utils.parseCSSColor($tw.wiki.extractTiddlerDataItem(this.palette,&quot;page-background&quot;));
-		this.bgColorBefore = this.bgColor;
-		$tw.wiki.addEventListener(&quot;change&quot;,function(changes) {
-			self.updateSystemColors(changes);
-			self.updateSiteTitles(changes);
-		});
-	};
-
-	AndroidConnector.prototype.padTwo = function(s) {
-		if(s.length === 1) {
-			s = &quot;0&quot; + s;
-		} else if(s.length === &quot;0&quot;) {
-			s = &quot;00&quot;;
-		}
-		return s;
-	};
-
-	AndroidConnector.prototype.rgbaToHex = function(rgba) {
-		if(rgba === null || rgba === undefined) {
-			return (&quot;#f4f4f4&quot;);
-		}
-		var r = parseInt(rgba[0], 10),
-			g = parseInt(rgba[1], 10),
-			b = parseInt(rgba[2], 10);
-		var rString = this.padTwo(r.toString(16)),
-			gString = this.padTwo(g.toString(16)),
-			bString = this.padTwo(b.toString(16));
-		return (&quot;#&quot; + rString + gString + bString);
-	};
-
-	AndroidConnector.prototype.updateSiteTitles = function(changes) {
-		if($tw.utils.hop(changes,&quot;$:/SiteTitle&quot;)) {
-			window.twi.setSiteTitle('&quot;' + $tw.wiki.getTiddlerText(&quot;$:/SiteTitle&quot;) + '&quot;');
-		} else if($tw.utils.hop(changes,&quot;$:/SiteSubtitle&quot;)) {
-			window.twi.setSiteSubtitle('&quot;' + $tw.wiki.getTiddlerText(&quot;$:/SiteSubtitle&quot;) + '&quot;');
-		}
-	};
-
-	AndroidConnector.prototype.updateSystemColors = function(changes) {
-		var bgColorTest,
-			parsedColor,
-			brightnessTarget,
-			brightnessA,
-			brightnessB,
-			finalColor;
-		if($tw.utils.hop(changes,&quot;$:/palette&quot;)) {
-			this.palette = $tw.wiki.getTiddlerText(&quot;$:/palette&quot;);
-			bgColorTest = $tw.wiki.extractTiddlerDataItem(this.palette,&quot;page-background&quot;);
-			parsedColor = this.rgbaToHex($tw.utils.parseCSSColor(bgColorTest));
-			if (parsedColor !== null &amp;&amp; parsedColor !== undefined) {
-				this.bgColor = parsedColor;
-			} else {
-				this.bgColor = bgColorTest;
-			}
-			if (this.bgColorBefore !== this.bgColor) {
-				window.twi.updateSystemColors(this.bgColor);
-
-				var rgbTarget = $tw.utils.parseCSSColor(this.bgColor),
-					rgbColourA = $tw.utils.parseCSSColor($tw.wiki.extractTiddlerDataItem(this.palette,&quot;foreground&quot;)),
-					rgbColourB = $tw.utils.parseCSSColor(&quot;#ffffff&quot;);
-
-				brightnessTarget = rgbTarget[0] * 0.299 + rgbTarget[1] * 0.587 + rgbTarget[2] * 0.114,
-				brightnessA = rgbColourA[0] * 0.299 + rgbColourA[1] * 0.587 + rgbColourA[2] * 0.114,
-				brightnessB = rgbColourB[0] * 0.299 + rgbColourB[1] * 0.587 + rgbColourB[2] * 0.114;
-
-				finalColor = Math.abs(brightnessTarget - brightnessA) &gt; Math.abs(brightnessTarget - brightnessB) ? this.rgbaToHex(rgbColourA) : &quot;#ffffff&quot;;
-
-				if(finalColor === &quot;#ffffff&quot;) {
-					window.twi.setDarkStatusbarFg();
-				} else {
-					window.twi.setLightStatusbarFg();
-				}
-				this.bgColorBefore = this.bgColor;
-			}
-		}
-		if($tw.utils.hop(changes,this.palette)) {
-			bgColorTest = $tw.wiki.extractTiddlerDataItem(this.palette,&quot;page-background&quot;);
-			var bgColorNew;
-			parsedColor = this.rgbaToHex($tw.utils.parseCSSColor(bgColorTest));
-			if (parsedColor !== null &amp;&amp; parsedColor !== undefined) {
-				bgColorNew = parsedColor;
-			} else {
-				bgColorNew = bgColorTest;
-			}
-			if(bgColorNew !== this.bgColor) {
-				window.twi.updateSystemColors(bgColorNew);
-
-				rgbTarget = $tw.utils.parseCSSColor(bgColorNew),
-				rgbColourA = $tw.utils.parseCSSColor($tw.wiki.extractTiddlerDataItem(this.palette,&quot;foreground&quot;)),
-				rgbColourB = $tw.utils.parseCSSColor(&quot;#ffffff&quot;);
-
-				brightnessTarget = rgbTarget[0] * 0.299 + rgbTarget[1] * 0.587 + rgbTarget[2] * 0.114,
-				brightnessA = rgbColourA[0] * 0.299 + rgbColourA[1] * 0.587 + rgbColourA[2] * 0.114,
-				brightnessB = rgbColourB[0] * 0.299 + rgbColourB[1] * 0.587 + rgbColourB[2] * 0.114;
-
-				finalColor = Math.abs(brightnessTarget - brightnessA) &gt; Math.abs(brightnessTarget - brightnessB) ? this.rgbaToHex(rgbColourA) : &quot;#ffffff&quot;;
-
-				if(finalColor === &quot;#ffffff&quot;) {
-					window.twi.setDarkStatusbarFg();
-				} else {
-					window.twi.setLightStatusbarFg();
-				}
-				this.bgColor = bgColorNew;
-				this.bgColorBefore = bgColorNew;
-			}
-		}
-	};
-
-	AndroidConnector.prototype.getWikiColor = function(colorname) {
-		var bgColorTest,
-			parsedColor,
-			result;
-		bgColorTest = $tw.wiki.extractTiddlerDataItem(this.palette,colorname);
-		parsedColor = this.rgbaToHex($tw.utils.parseCSSColor(bgColorTest));
-		if (parsedColor !== null &amp;&amp; parsedColor !== undefined) {
-			result = parsedColor;
-		} else {
-			result = bgColorTest;
-		}
-		return result;
-	};
-
-	AndroidConnector.prototype.getWikiColorContrast = function(colorname,fallbackColor) {
-		var bgColorTest,
-			parsedColor,
-			result;
-		bgColorTest = $tw.wiki.extractTiddlerDataItem(this.palette,colorname);
-		parsedColor = $tw.utils.parseCSSColor(bgColorTest);
-		if (parsedColor !== null &amp;&amp; parsedColor !== undefined) {
-			result = parsedColor;
-		} else {
-			result = bgColorTest;
-		}
-
-		var rgbTarget = $tw.utils.parseCSSColor($tw.wiki.extractTiddlerDataItem(this.palette,&quot;page-background&quot;)),
-			rgbColourA = result,
-			rgbColourB = $tw.utils.parseCSSColor(fallbackColor);
-
-		var brightnessTarget = rgbTarget[0] * 0.299 + rgbTarget[1] * 0.587 + rgbTarget[2] * 0.114,
-			brightnessA = rgbColourA[0] * 0.299 + rgbColourA[1] * 0.587 + rgbColourA[2] * 0.114,
-			brightnessB = rgbColourB[0] * 0.299 + rgbColourB[1] * 0.587 + rgbColourB[2] * 0.114;
-
-		var finalColor = Math.abs(brightnessTarget - brightnessA) &gt; Math.abs(brightnessTarget - brightnessB) ? this.rgbaToHex(result) : fallbackColor;
-
-		return finalColor;
-	};
-
-	exports.AndroidConnector = AndroidConnector;
-
-})();</pre>
 </div>
 <div created="20190109193001116" modified="20190109193011867" tags="" title="This is a dummy for the landing page">
 <pre></pre>
