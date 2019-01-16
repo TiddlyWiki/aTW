@@ -323,20 +323,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         String action = intent.getAction();
-        setIntent(intent);
         if (Intent.ACTION_VIEW.equals(action)) {
-            String intentData = DocumentsContract.getDocumentId(getIntent().getData()).replaceFirst("raw:","");//UtilMethods.getPath(mContext,intent.getData());//DocumentsContract.getDocumentId(intent.getData()).replaceFirst("raw:","");
-            String urlToLoad;
-            Fragment fragment = (Fragment) MainFragment.newInstance();
-            urlToLoad = "file://" + intentData;
-            Bundle loadBundle = new Bundle();
-            loadBundle.putString("urlToLoad", "file://" + intentData);
-            fragment.setArguments(loadBundle);
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            hideAllFragments(getSupportFragmentManager(), ft, urlToLoad, fragment);
-            ft.add(R.id.fullscreen_content, fragment, urlToLoad).commit();
-            if (!urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/landing_page.html") && !urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/BackStage/backstage.html")) {
-                subMenu.add(urlToLoad.replaceFirst("file:///storage/emulated/0/",""));
+            Uri intentData = intent.getData();
+            String intentDataString = null;// = DocumentsContract.getDocumentId(getIntent().getData()).replaceFirst("raw:","");//UtilMethods.getPath(mContext,intent.getData());//DocumentsContract.getDocumentId(intent.getData()).replaceFirst("raw:","");
+            try {
+                intentDataString = UtilMethods.getPath(mContext,intentData);
+            } catch (Exception e) {
+                e.printStackTrace();
+                try {
+                    intentDataString = DocumentsContract.getDocumentId(intentData).replaceFirst("raw:","");
+                } catch (Exception g) {
+                    g.printStackTrace();
+                }
+            }
+            if(intentDataString != null) {
+                String urlToLoad;
+                Fragment fragment = (Fragment) MainFragment.newInstance();
+                urlToLoad = "file://" + intentDataString;
+                Bundle loadBundle = new Bundle();
+                loadBundle.putString("urlToLoad", urlToLoad);
+                fragment.setArguments(loadBundle);
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                hideAllFragments(getSupportFragmentManager(), ft, urlToLoad, fragment);
+                ft.add(R.id.fullscreen_content, fragment, urlToLoad).commit();
+                if (!urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/landing_page.html") && !urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/BackStage/backstage.html")) {
+                    subMenu.add(urlToLoad.replaceFirst("file:///storage/emulated/0/", ""));
+                }
             }
         }
     }
@@ -376,20 +388,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
         } else if (Intent.ACTION_VIEW.equals(action)) {
-            String intentData = DocumentsContract.getDocumentId(getIntent().getData()).replaceFirst("raw:","");
-            String urlToLoad = "file://" + intentData;
-            Fragment fragment = (Fragment) MainFragment.newInstance();
-            urlToLoad = "file://" + intentData;
-            Bundle loadBundle = new Bundle();
-            loadBundle.putString("urlToLoad", "file://" + intentData);
-            fragment.setArguments(loadBundle);
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            hideAllFragments(getSupportFragmentManager(), ft, urlToLoad, fragment);
-            ft.replace(R.id.fullscreen_content, fragment, urlToLoad).commit();
-            if (!urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/landing_page.html") && !urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/BackStage/backstage.html")) {
-                subMenu.add(urlToLoad.replaceFirst("file:///storage/emulated/0/",""));
+                Uri intentData = intent.getData();
+                String intentDataString = null;// = DocumentsContract.getDocumentId(getIntent().getData()).replaceFirst("raw:","");//UtilMethods.getPath(mContext,intent.getData());//DocumentsContract.getDocumentId(intent.getData()).replaceFirst("raw:","");
+                try {
+                    intentDataString = UtilMethods.getPath(mContext, intentData);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    try {
+                        intentDataString = DocumentsContract.getDocumentId(intentData).replaceFirst("raw:", "");
+                    } catch (Exception g) {
+                        g.printStackTrace();
+                    }
+                }
+                if (intentDataString != null) {
+                    String urlToLoad;
+                    Fragment fragment = (Fragment) MainFragment.newInstance();
+                    urlToLoad = "file://" + intentDataString;
+                    Bundle loadBundle = new Bundle();
+                    loadBundle.putString("urlToLoad", urlToLoad);
+                    fragment.setArguments(loadBundle);
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    hideAllFragments(getSupportFragmentManager(), ft, urlToLoad, fragment);
+                    ft.add(R.id.fullscreen_content, fragment, urlToLoad).commit();
+                    if (!urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/landing_page.html") && !urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/BackStage/backstage.html")) {
+                        subMenu.add(urlToLoad.replaceFirst("file:///storage/emulated/0/", ""));
+                    }
+                }
             }
-        }
     }
 
     @Override

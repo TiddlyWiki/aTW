@@ -103,6 +103,7 @@ public class UtilMethods {
                     if(!(currentImage instanceof BitmapDrawable)) {
                         DrawableCompat.setTint(navImage.getDrawable(), newColor);
                     }
+                    navigationView.refreshDrawableState();
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
                 }
