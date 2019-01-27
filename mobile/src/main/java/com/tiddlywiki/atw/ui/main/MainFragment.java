@@ -187,7 +187,7 @@ public class MainFragment extends Fragment {
                         public void onReceiveValue(String s) {
                             saveLandingPageAsset(mWebView.getUrl(), "sitetitle", s);
                             Activity activity = (Activity) getContext();
-                            activity.setTaskDescription(new ActivityManager.TaskDescription(s));
+                            activity.setTaskDescription(new ActivityManager.TaskDescription(s.substring(1,s.length() -1)));
                         }
                     });
             //set system system ui colors to wiki background
@@ -238,7 +238,11 @@ public class MainFragment extends Fragment {
                             NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
                             View headerView = navigationView.getHeaderView(0);
                             TextView siteTitle = (TextView) headerView.findViewById(R.id.siteTitle);
-                            siteTitle.setText(sitetitle.substring(1,sitetitle.length() -1));
+                            if(sitetitle == null) {
+                                siteTitle.setText("aTW");
+                            } else {
+                                siteTitle.setText(sitetitle.substring(1,sitetitle.length() -1));
+                            }
                         }
             });
             mWebView.evaluateJavascript("javascript:$tw.wiki.getTiddlerText('$:/SiteSubtitle');",//$tw.wiki.extractTiddlerDataItem($tw.wiki.getTiddlerText('$:/palette'),'foreground');",
@@ -248,7 +252,11 @@ public class MainFragment extends Fragment {
                             NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
                             View headerView = navigationView.getHeaderView(0);
                             TextView siteSubTitle = (TextView) headerView.findViewById(R.id.textView);
-                            siteSubTitle.setText(sitesubtitle.substring(1,sitesubtitle.length() - 1));
+                            if(sitesubtitle == null) {
+                                siteSubTitle.setText("A simple Android app for TiddlyWiki");
+                            } else {
+                                siteSubTitle.setText(sitesubtitle.substring(1,sitesubtitle.length() -1));
+                            }
                         }
                     });
         }
@@ -313,36 +321,43 @@ public class MainFragment extends Fragment {
         {
             WebView.HitTestResult result = view.getHitTestResult();
             String urlToLoad = result.getExtra();
-            Fragment fragment = null;
-            Class fragmentClass = MainFragment.class;
+            if(urlToLoad != null && !urlToLoad.startsWith("http://") && !urlToLoad.startsWith("https://")) {
+                Fragment fragment = null;
+                Class fragmentClass = MainFragment.class;
 
-            try {
-                fragment = (Fragment) fragmentClass.newInstance();
-                Bundle loadBundle = new Bundle();
-                loadBundle.putString("urlToLoad",urlToLoad);
-                fragment.setArguments(loadBundle);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            FragmentTransaction ft = fragmentManager.beginTransaction();
-            hideAllFragments(fragmentManager,ft,urlToLoad,fragment);
-
-            if(fragment != null && fragmentManager.findFragmentByTag(urlToLoad) == null) {
-                Fragment visibleFragment = getVisibleFragment(fragmentManager);
-                ft.add(R.id.fullscreen_content, fragment, urlToLoad).addToBackStack(urlToLoad).show(visibleFragment).commit();
-                if (!urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/landing_page.html") && !urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/BackStage/backstage.html")) {
-                    MainActivity.subMenu.add(urlToLoad.replaceFirst("file:///storage/emulated/0/",""));
+                try {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                    Bundle loadBundle = new Bundle();
+                    loadBundle.putString("urlToLoad", urlToLoad);
+                    fragment.setArguments(loadBundle);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } else {
-                Fragment visibleFragment = getVisibleFragment(fragmentManager);
-                Fragment bringTopFragment = fragmentManager.findFragmentByTag(urlToLoad);
-                if(visibleFragment != null && bringTopFragment != null) {
-                    ft.hide(visibleFragment).show(bringTopFragment).commit();
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                hideAllFragments(fragmentManager, ft, urlToLoad, fragment);
+
+                if (fragment != null && fragmentManager.findFragmentByTag(urlToLoad) == null) {
+                    Fragment visibleFragment = getVisibleFragment(fragmentManager);
+                    ft.add(R.id.fullscreen_content, fragment, urlToLoad).addToBackStack(urlToLoad).show(visibleFragment).commit();
+                    if (!urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/landing_page.html") && !urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/BackStage/backstage.html")) {
+                        MainActivity.subMenu.add(urlToLoad.replaceFirst("file:///storage/emulated/0/", ""));
+                        MainActivity.subMenu.getItem(0).setCheckable(true);
+                        MainActivity.subMenu.getItem(0).setChecked(true);
+                    }
+                } else {
+                    Fragment visibleFragment = getVisibleFragment(fragmentManager);
+                    Fragment bringTopFragment = fragmentManager.findFragmentByTag(urlToLoad);
+                    if (visibleFragment != null && bringTopFragment != null) {
+                        ft.hide(visibleFragment).show(bringTopFragment).commit();
+                    }
                 }
+                return true;
             }
-            return true;
+            view.getContext().startActivity(
+                    new Intent(Intent.ACTION_VIEW, Uri.parse(urlToLoad)));
+            return false;
         }
 
         public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> filePath, WebChromeClient.FileChooserParams fileChooserParams) {

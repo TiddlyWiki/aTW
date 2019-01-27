@@ -76,13 +76,13 @@ startService(downloadIntent);
             return false;
         }
 
-        if (url.startsWith("tel:")) {
+        if (url != null && url.startsWith("tel:")) {
             Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
             view.getContext().startActivity(intent);
             return true;
         }
 
-        if (url.startsWith("mailto:")) {
+        if (url != null && url.startsWith("mailto:")) {
             Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
             view.getContext().startActivity(intent);
             return true;
@@ -129,10 +129,14 @@ startService(downloadIntent);
                         NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
                         View headerView = navigationView.getHeaderView(0);
                         TextView siteTitle = (TextView) headerView.findViewById(R.id.siteTitle);
-                        siteTitle.setText(sitetitle.substring(1,sitetitle.length() -1));
+                        if(sitetitle != null && !sitetitle.equals("null")) {
+                            siteTitle.setText(sitetitle.substring(1, sitetitle.length() - 1));
+                        } else {
+                            siteTitle.setText("aTW");
+                        }
                         saveLandingPageAsset(mWebView.getUrl(),"sitetitle",sitetitle);
                         Activity activity = (Activity) mContext;
-                        activity.setTaskDescription(new ActivityManager.TaskDescription(sitetitle));
+                        activity.setTaskDescription(new ActivityManager.TaskDescription(sitetitle.substring(1, sitetitle.length() - 1)));
                     }
                 });
         mWebView.evaluateJavascript("javascript:$tw.wiki.getTiddlerText('$:/SiteSubtitle');",//$tw.wiki.extractTiddlerDataItem($tw.wiki.getTiddlerText('$:/palette'),'foreground');",
@@ -142,7 +146,11 @@ startService(downloadIntent);
                         NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
                         View headerView = navigationView.getHeaderView(0);
                         TextView siteSubTitle = (TextView) headerView.findViewById(R.id.textView);
-                        siteSubTitle.setText(sitesubtitle.substring(1,sitesubtitle.length() - 1));
+                        if(sitesubtitle != null && !sitesubtitle.equals("null")) {
+                            siteSubTitle.setText(sitesubtitle.substring(1,sitesubtitle.length() - 1));
+                        } else {
+                            siteSubTitle.setText("A simple Android app for TiddlyWiki");
+                        }
                     }
                 });
         //extract favicon and siteTitle from wiki, for use in landing page
@@ -185,7 +193,11 @@ startService(downloadIntent);
                             decor.setSystemUiVisibility(0);
                         } else {
                             View decor = mWindow.getDecorView();
-                            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+                            if (Build.VERSION.SDK_INT >= 26) {
+                                decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+                            } else {
+                                decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                            }
                         }
 
                         UtilMethods.setForegroundColors(mWebView,mWindow,colorString.replaceAll("\"", ""));

@@ -40,6 +40,7 @@ public class UtilMethods {
                     if (Build.VERSION.SDK_INT >= 26) {
                         mWindow.setNavigationBarColor(newColor);
                     }
+                    View decor = mWindow.getDecorView();
                     DrawerLayout drawer = (DrawerLayout) mWindow.findViewById(R.id.drawer_layout);
                     NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
                     navigationView.setBackgroundColor(newColor);

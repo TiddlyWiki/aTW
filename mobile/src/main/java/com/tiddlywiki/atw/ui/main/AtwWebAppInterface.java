@@ -73,7 +73,11 @@ public class AtwWebAppInterface {
             @Override
             public void run() {
                 View decor = mWindow.getDecorView();
-                decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+                if (Build.VERSION.SDK_INT >= 26) {
+                    decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+                } else {
+                    decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                }
             }
         });
         setForegroundColors();
@@ -87,7 +91,11 @@ public class AtwWebAppInterface {
                 NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
                 View headerView = navigationView.getHeaderView(0);
                 TextView siteTitle = (TextView) headerView.findViewById(R.id.siteTitle);
-                siteTitle.setText(sitetitle.substring(1, sitetitle.length() - 1));
+                if(sitetitle != null && !sitetitle.equals("null")) {
+                    siteTitle.setText(sitetitle.substring(1, sitetitle.length() - 1));
+                } else {
+                    siteTitle.setText("aTW");
+                }
             }
         });
     }
@@ -100,7 +108,11 @@ public class AtwWebAppInterface {
                 NavigationView navigationView = (NavigationView) mWindow.findViewById(R.id.nav_view);
                 View headerView = navigationView.getHeaderView(0);
                 TextView siteSubTitle = (TextView) headerView.findViewById(R.id.textView);
-                siteSubTitle.setText(sitesubtitle.substring(1, sitesubtitle.length() - 1));
+                if(sitesubtitle != null && !sitesubtitle.equals("null")) {
+                    siteSubTitle.setText(sitesubtitle.substring(1, sitesubtitle.length() - 1));
+                } else {
+                    siteSubTitle.setText("A simple Android app for TiddlyWiki");
+                }
             }
         });
     }

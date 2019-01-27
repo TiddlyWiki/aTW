@@ -28,6 +28,9 @@ import android.view.MotionEvent;
 import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.widget.BaseAdapter;
+import android.widget.HeaderViewListAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -348,6 +351,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ft.add(R.id.fullscreen_content, fragment, urlToLoad).commit();
                 if (!urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/landing_page.html") && !urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/BackStage/backstage.html")) {
                     subMenu.add(urlToLoad.replaceFirst("file:///storage/emulated/0/", ""));
+                    subMenu.getItem(0).setCheckable(true);
+                    subMenu.getItem(0).setChecked(true);
                 }
             }
         }
@@ -369,7 +374,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.getMenu().getItem(0).setChecked(true);
         Menu menu = navigationView.getMenu();
-        subMenu = menu.addSubMenu(getString(R.string.nav_submenu_title));
+        //MenuItem navSubMenu = navigationView.findViewById(R.id.nav_submenu);
+        subMenu = menu.addSubMenu(R.id.open_wikies,0,0,"Open");//navigationView.findViewById(R.id.open_wikies_item);
+        for (int i = 0, count = navigationView.getChildCount(); i < count; i++) {
+            final View child = navigationView.getChildAt(i);
+            if (child instanceof ListView) {
+                final ListView menuView = (ListView) child;
+                final HeaderViewListAdapter adapter = (HeaderViewListAdapter) menuView.getAdapter();
+                final BaseAdapter wrapped = (BaseAdapter) adapter.getWrappedAdapter();
+                wrapped.notifyDataSetChanged();
+            }
+        }
+        //subMenu.setGroupCheckable(R.id.open_wikies,true,true);
+        //subMenu = findViewById(R.id.open_wikies);//findViewById(R.id.open_wikies);                    //menu.addSubMenu(getString(R.string.nav_submenu_title));
+        //navigationView.setGroupCheckable();
         navigationView.setNavigationItemSelectedListener(this);
 
         int fileAccessPermission = ContextCompat.checkSelfPermission(mContext,
@@ -412,6 +430,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     ft.add(R.id.fullscreen_content, fragment, urlToLoad).commit();
                     if (!urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/landing_page.html") && !urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/BackStage/backstage.html")) {
                         subMenu.add(urlToLoad.replaceFirst("file:///storage/emulated/0/", ""));
+                        subMenu.getItem(0).setCheckable(true);
+                        subMenu.getItem(0).setChecked(true);
+                        navigationView.setCheckedItem(subMenu.getItem(0));
+                        for (int i = 0, count = navigationView.getChildCount(); i < count; i++) {
+                            final View child = navigationView.getChildAt(i);
+                            if (child instanceof ListView) {
+                                final ListView menuView = (ListView) child;
+                                final HeaderViewListAdapter adapter = (HeaderViewListAdapter) menuView.getAdapter();
+                                final BaseAdapter wrapped = (BaseAdapter) adapter.getWrappedAdapter();
+                                wrapped.notifyDataSetChanged();
+                            }
+                        }
                     }
                 }
             }
@@ -486,6 +516,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             urlToLoad = "file:///storage/emulated/0/" + String.valueOf(item);
         }
 
+        item.setCheckable(true);
+        item.setChecked(true);
+
         try {
             fragment = (Fragment) fragmentClass.newInstance();
             Bundle loadBundle = new Bundle();
@@ -504,6 +537,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ft.add(R.id.fullscreen_content, fragment, urlToLoad).addToBackStack(urlToLoad).show(visibleFragment).commit();
             if (!urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/landing_page.html") && !urlToLoad.equals("file:///storage/emulated/0/aTW/LandingPage/BackStage/backstage.html")) {
                 subMenu.add(urlToLoad.replaceFirst("file:///storage/emulated/0/",""));
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                for (int i = 0, count = navigationView.getChildCount(); i < count; i++) {
+                    final View child = navigationView.getChildAt(i);
+                    if (child != null && child instanceof ListView) {
+                        final ListView menuView = (ListView) child;
+                        final HeaderViewListAdapter adapter = (HeaderViewListAdapter) menuView.getAdapter();
+                        final BaseAdapter wrapped = (BaseAdapter) adapter.getWrappedAdapter();
+                        wrapped.notifyDataSetChanged();
+                    }
+                }
             }
         } else {
             Fragment visibleFragment = getVisibleFragment(fragmentManager);
